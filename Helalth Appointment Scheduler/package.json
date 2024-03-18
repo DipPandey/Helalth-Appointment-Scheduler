@@ -1,0 +1,14 @@
+{
+  "name": "helalth-appointment-scheduler",
+  "version": "0.0.0",
+  "description": "Helalth Appointment Scheduler",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "devDependencies": {
+    "eslint": "^8.21.0"
+  },
+  "eslintConfig": {
+  }
+}
