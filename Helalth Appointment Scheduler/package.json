@@ -1,14 +1,20 @@
 {
-  "name": "helalth-appointment-scheduler",
-  "version": "0.0.0",
-  "description": "Helalth Appointment Scheduler",
-  "main": "server.js",
-  "author": {
-    "name": ""
+  "name": "your_project_name",
+  "version": "1.0.0",
+  "description": "Your project description",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ."
   },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.21.0"
+    "eslint": "^8.0.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.0"
   },
   "eslintConfig": {
+    "extends": "airbnb-base"
   }
 }
