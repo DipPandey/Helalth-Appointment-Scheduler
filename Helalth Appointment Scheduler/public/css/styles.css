@@ -6,13 +6,13 @@
 
 /* Set background color and font family */
 body {
-    background-color: #0056b3;
-    font-family: Arial, sans-serif;
+    background-color: #f8f9fa; /* Light background color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Common system font */
 }
 
 /* Header styling */
 header {
-    background-color: #ff0000;
+    background-color: #007bff; /* Bootstrap primary color */
     color: #fff;
     padding: 20px;
     text-align: center;
@@ -20,29 +20,21 @@ header {
 
 /* Main content styling */
 main {
-    margin: 20px;
+    margin: 20px auto; /* Center main content */
     padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* White background */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
 }
 
 /* Button styling */
 button {
-    display: inline-block;
     padding: 10px 20px;
     margin: 10px;
-    background-color: #007bff;
-    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
-
-    button:hover {
-        background-color: #0056b3;
-    }
 
 /* Footer styling */
 footer {
