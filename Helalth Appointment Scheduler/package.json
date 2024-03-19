@@ -1,20 +1,23 @@
 {
-  "name": "your_project_name",
-  "version": "1.0.0",
-  "description": "Your project description",
-  "main": "index.js",
+  "name": "health-appointment-scheduler",
+  "version": "0.0.1",
+  "description": "Health Appointment Scheduler",
+  "main": "server.js",
+  "author": {
+    "name": "Your Name"
+  },
   "scripts": {
     "lint": "eslint ."
   },
-  "keywords": [],
-  "author": "Your Name",
-  "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.0.0",
+    "eslint": "^8.21.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.0"
   },
   "eslintConfig": {
     "extends": "airbnb-base"
+  },
+  "dependencies": {
+    "mongoose": "^8.2.2"
   }
 }
