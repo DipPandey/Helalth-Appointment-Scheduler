@@ -45,14 +45,13 @@
     <Content Include="src\routes\userRoutes.js" />
     <Content Include="src\services\notificationService.js" />
     <Content Include="src\utils\validation.js" />
-    <Content Include="public\views\index.html" />
+    <Content Include="public\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="config\" />
     <Folder Include="public\" />
     <Folder Include="public\css\" />
     <Folder Include="public\js\" />
-    <Folder Include="public\views\" />
     <Folder Include="src\" />
     <Folder Include="src\controllers\" />
     <Folder Include="src\Models\" />
