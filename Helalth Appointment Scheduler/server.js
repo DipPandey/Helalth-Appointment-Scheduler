@@ -29,14 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 // Static files middleware
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-const appointmentRoutes = require('./routes/appointmentRoutes');
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-
-app.use('/api/appointments', appointmentRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((error, req, res, next) => {
