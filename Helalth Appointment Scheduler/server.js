@@ -1,17 +1,11 @@
 'use strict';
 const express = require('express');
+const path = require('path');
 const app = express();
-const path = require('path'); // Import the 'path' module
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
-// Set up middleware to parse JSON requests
-app.use(express.json());
-
-// Serve static files from the 'public' directory
+// Set up middleware to serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Serve static files from the 'views' directory
-app.use(express.static(path.join(__dirname, 'views')));
 
 // Start the server
 app.listen(port, () => {
