@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Healthcare Appointment Scheduler</title>
-    <link rel="stylesheet" href= "css/styles.css">
-
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <header>
-        <h1>Welcome to the Healthcare Appointment Scheduler</h1>
+    <header class="bg-primary text-white">
+        <div class="container">
+            <h1>Welcome to the Healthcare Appointment Scheduler</h1>
+        </div>
     </header>
-    <main>
+    <main class="container mt-5">
         <p>Fuck this website</p>
         <p>Get started by signing in or creating an account:</p>
-        <button onclick="window.location.href = '/login'">Login</button>
-        <button onclick="window.location.href = '/signup'">Sign Up</button>
+        <button class="btn btn-primary mr-2" onclick="window.location.href = '/login'">Login</button>
+        <button class="btn btn-secondary" onclick="window.location.href = '/signup'">Sign Up</button>
     </main>
-    <footer>
-        <p>&copy; 2024 Healthcare Appointment Scheduler</p>
+    <footer class="bg-primary text-white py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2024 Healthcare Appointment Scheduler</p>
+        </div>
     </footer>
 </body>
+
 </html>
