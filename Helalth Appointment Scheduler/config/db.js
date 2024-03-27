@@ -1,19 +1,24 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-async function connectDB() {
-    const dbURI = process.env.MONGODB_URI || 'mongodb://localhost/HAS'; // Default fallback to localhost
-    try {
-        await mongoose.connect(dbURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false, // This option is for handling deprecation warnings.
-            useCreateIndex: true // This option is also for handling deprecation warnings.
-        });
-        console.log('Connected to MongoDB');
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        process.exit(1); // Exit process with failure
-    }
-}
+const MONGODB_URI = 'mongodb://localhost:27017/HAS';
+const db = mongoose.connection;
 
-module.exports = connectDB;
+mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => console.log('Successfully connected to HAS MongoDB.'))
+    .catch(error => console.error('MongoDB connection error:', error));
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', function () {
+    // we're connected!
+    console.log('Connected to the MongoDB database.');
+});
+
+module.exports = mongoose;
+
+
+
+
+

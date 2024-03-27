@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Healthcare Appointment Scheduler</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">HealthScheduler</a>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link" href="#">Home</a>
+                <a class="nav-item nav-link" href="#">My Appointments</a>
+                <a class="nav-item nav-link" href="#">Book New Appointment</a>
+                <a class="nav-item nav-link" href="#">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="user-profile">
+            <img src="path_to_user_icon" alt="User Icon" class="user-icon">
+            <h3>Welcome, [User Name]</h3>
+            <p>Here's what's coming up...</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div id="appointments-calendar"></div>
+                <h4>Upcoming Appointments</h4>
+                <ul id="upcoming-appointments" class="list-group">
+                    <!-- List of upcoming appointments will be dynamically populated here -->
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <div class="notifications">
+                    <h4>Notifications</h4>
+                    <!-- Notifications will be dynamically populated here -->
+                </div>
+                <div class="quick-actions">
+                    <h4>Quick Actions</h4>
+                    <button class="btn btn-primary">Check-In Online</button>
+                    <button class="btn btn-secondary">View Medical Records</button>
+                    <button class="btn btn-info">Contact Support</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript for Dashboard Interactivity -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
