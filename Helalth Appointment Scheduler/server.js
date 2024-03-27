@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const authRoutes = require('./routes/authRoutes'); // Adjust the path to where your authRoutes.js file is located.
+const authRoutes = require('./routes/authRoutes.js'); // Adjust the path to where your authRoutes.js file is located.
 
 
 
