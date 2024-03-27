@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Send data to server
-    fetch('auth/login', {
+    fetch('/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
