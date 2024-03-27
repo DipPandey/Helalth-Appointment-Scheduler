@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash the password before saving it to the database
-userSchema.pre('save', async function (next) {
-    if (this.isModified('password') || this.isNew) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(this.password, salt);
-        this.password = hash;
-    }
-    next();
-});
+//userSchema.pre('save', async function (next) {
+   // if (this.isModified('password') || this.isNew) {
+       // const salt = await bcrypt.genSalt(10);
+       // const hash = await bcrypt.hash(this.password, salt);
+       // this.password = hash;
+   // }
+   // next();
+//});
 
 userSchema.methods.comparePassword = function (candidatePassword, callback) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
