@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Define authRoutes after the express app is initialized and middleware set
 
-app.use('/auth', authRoutes);
+app.use('/auth/login', authRoutes);
 
 // Route to serve the index.html file
 app.get('/', (req, res) => {
