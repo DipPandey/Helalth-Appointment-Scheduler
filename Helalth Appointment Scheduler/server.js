@@ -2,8 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const cors = require('cors');
-app.use(cors());
+
 
 
 // Connect to MongoDB
@@ -23,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Route to serve the index.html file
 app.get('/', (req, res) => {
   // Change the path to your actual path to the index.html if it's different
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public'));
 });
 
 // Start the server

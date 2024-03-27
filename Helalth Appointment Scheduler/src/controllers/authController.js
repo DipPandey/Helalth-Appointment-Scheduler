@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
         req.session.userId = user._id;
 
         // Redirect to dashboard page
-        res.json({ message: 'Login successful', redirectTo: '/dashboard' });
+        res.json({ message: 'Login successful', redirectTo: '/dashboard.html' });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
