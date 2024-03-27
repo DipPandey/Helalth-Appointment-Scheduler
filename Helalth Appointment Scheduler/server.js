@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+// Make sure this path is correct relative to your server.js file
+const authRoutes = require('/authRoutes');
 
 // Initialize Express
 const app = express();
@@ -20,9 +22,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Define authRoutes after the express app is initialized and middleware set
-// Make sure this path is correct relative to your server.js file
-//const authRoutes = require('/routes/authRoutes');
-//app.use('/auth', authRoutes);
+
+app.use('/auth', authRoutes);
 
 // Route to serve the index.html file
 app.get('/', (req, res) => {
