@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const authRoutes = require('./routes/authRoutes'); // Adjust the path to where your authRoutes.js file is located.
 
 
 
+app.use(express.json()); // for parsing application/json
+app.use('/auth', authRoutes); // Set up routes
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/HAS', {
