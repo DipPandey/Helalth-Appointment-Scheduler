@@ -16,14 +16,13 @@ exports.login = async (req, res) => {
         }
 
         // Check if password is correct
+
         const isMatch = await user.comparePassword(password); // assuming you have a method to compare passwords
+        
         if (!isMatch) {
             return res.status(401).json({ message: 'Authentication failed' });
-            console.log("what the fuck failed again")
+            
         }
-
-        // Assuming you're using sessions
-        req.session.userId = user._id;
 
         // Redirect to dashboard page
         res.json({ message: 'Login successful', redirectTo: '/dashboard' });
