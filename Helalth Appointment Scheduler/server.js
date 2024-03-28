@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-// Make sure this path is correct relative to your server.js file
+const cors = require('cors');
+app.use(cors());
+
 const authRoutes = require('./routes/authRoutes');
 
 // Initialize Express
