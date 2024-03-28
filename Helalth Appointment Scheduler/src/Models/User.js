@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     profilePicture: { type: String }
 });
 
- Pre-save hook to hash the password before saving it to the database
+//Pre-save hook to hash the password before saving it to the database
 userSchema.pre('save', async function (next) {
     if (this.isModified('password') || this.isNew) {
         const salt = await bcrypt.genSalt(10);
@@ -26,14 +26,10 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.methods.comparePassword = function (candidatePassword, callback) {
-    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, isMatch);
-    });
+userSchema.methods.comparePassword = function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
 };
+
 
 // Create the model from the schema and export it
 const User = mongoose.model('User', userSchema);
