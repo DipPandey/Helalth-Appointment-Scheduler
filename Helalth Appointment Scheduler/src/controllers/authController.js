@@ -1,4 +1,14 @@
-const User = require('./models/User');
+const User = require('./Models/User');
+
+const session = require('express-session');
+
+app.use(session({
+    secret: 'your secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true } // for HTTPS
+}));
+
 
 exports.login = async (req, res) => {
     try {
