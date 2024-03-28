@@ -1,4 +1,4 @@
-const User = require('./Models/User');
+const User = require('./src/Models/User');
 
 const session = require('express-session');
 

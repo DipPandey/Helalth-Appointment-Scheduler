@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const authRoutes = require(path.resolve(__dirname, './routes/authRoutes'));
+cpnst authRoutes = require(path.resolve(__dirname, './src/routes/authRoutes'));
 
 
 // Initialize Express
