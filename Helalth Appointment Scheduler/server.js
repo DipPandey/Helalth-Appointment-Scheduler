@@ -4,6 +4,9 @@ const path = require('path');
 
 const authRoutes = require('./src/routes/authRoutes');
 
+const userRoutes = require('./src/routes/userRoutes'); // Adjust path as necessary
+
+
 
 
 
@@ -27,7 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Define authRoutes after the express app is initialized and middleware set
 
-app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);//auth routes
+app.use('/user', userRoutes);//user routes
 
 // Route to serve the index.html file
 app.get('/', (req, res) => {
