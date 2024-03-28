@@ -34,6 +34,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html')); // Ensure this path points to your actual index.html file
 });
 
+app.get('/dashboard', (req, res) => {
+    // Replace 'path/to/dashboard.html' with the actual path to your dashboard HTML file
+    res.sendFile(path.join(__dirname, 'public' , 'dashboard.html'));
+});
+
 
 
 // Start the server
