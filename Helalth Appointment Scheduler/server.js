@@ -1,13 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const cors = require('cors');
-app.use(cors());
+
+
 
 const authRoutes = require('./routes/authRoutes');
 
 // Initialize Express
 const app = express();
+
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/HAS', {
@@ -25,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Define authRoutes after the express app is initialized and middleware set
 
-app.use('/auth/login', authRoutes);
+app.use('/auth', authRoutes);
 
 // Route to serve the index.html file
 app.get('/', (req, res) => {
