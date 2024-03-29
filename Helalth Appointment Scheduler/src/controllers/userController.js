@@ -1,8 +1,5 @@
 
 const User = require('../models/User'); // Adjust path as necessary
-
-
-
 const jwt = require('jsonwebtoken');
 
 // A utility function to decode the JWT and get the userId
