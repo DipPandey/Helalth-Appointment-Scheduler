@@ -12,11 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 // Include authorization headers if needed
             },
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data); 
                 document.getElementById('editName').value = data.name;
                 document.getElementById('editEmail').value = data.email;
                 // Update the welcome message with the user's name
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 // Include authorization headers if needed
             },
             body: JSON.stringify({ name: updatedName, email: updatedEmail }),

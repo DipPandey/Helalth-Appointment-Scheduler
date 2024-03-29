@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
+
 
 const authRoutes = require('./src/routes/authRoutes');
 
@@ -14,13 +16,13 @@ const userRoutes = require('./src/routes/userRoutes'); // Adjust path as necessa
 const app = express();
 
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/HAS', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-    .then(() => console.log('Successfully connected to HAS MongoDB.'))
+    .then(() => console.log('Successfully connected to MongoDB.'))
     .catch((error) => console.error('MongoDB connection error:', error));
+
 
 // Middleware for parsing application/json
 app.use(express.json());
@@ -45,9 +47,9 @@ app.get('/dashboard', (req, res) => {
 
 
 
-// Start the server
-const PORT = process.env.PORT || 1337;
+const PORT = process.env.PORT || 1337; // Fallback to 3000 if process.env.PORT is not defined
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 

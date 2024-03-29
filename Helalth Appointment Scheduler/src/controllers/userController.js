@@ -1,11 +1,15 @@
 
 const User = require('../models/User'); // Adjust path as necessary
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const jwtSecret = process.env.JWT_SECRET;
+
+console.log("Fetching user profile", req.body);
 
 // A utility function to decode the JWT and get the userId
 const getUserIdFromToken = (token) => {
     try {
-        const decoded = jwt.verify(token, '6113'                                                                                                                                                                                        ); // Replace 'yourSecretKey' with your actual secret key
+        const decoded = jwt.verify(token, jwtSecret);                                                                                                                                                                                        ); // Replace 'yourSecretKey' with your actual secret key
         return decoded.userId;
     } catch (error) {
         console.error('Error decoding token:', error);
@@ -17,6 +21,7 @@ const getUserIdFromToken = (token) => {
 //Assuming the above getUserIdFromToken function is available in your project
 exports.getUserProfile = async (req, res) => {
     try {
+        console.log("Fetching user profile", req.headers.authorization);
         const token = req.headers.authorization.split(' ')[1]; // Assuming the Authorization header is in the format: Bearer <token>
         const userId = getUserIdFromToken(token);
 
