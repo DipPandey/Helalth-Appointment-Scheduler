@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Middleware for parsing application/json
 app.use(express.json());
 
-// Serve static files from the public directory
+// Serveing static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Define authRoutes after the express app is initialized and middleware set

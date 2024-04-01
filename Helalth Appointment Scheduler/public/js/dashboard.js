@@ -1,4 +1,4 @@
-/* global document, alert */
+
 document.addEventListener('DOMContentLoaded', function () {
     // Toggles the edit profile form visibility
     document.getElementById('toggleEditForm').addEventListener('click', function () {
@@ -13,11 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                // Include authorization headers if needed
+                // Include authorization headers 
             },
         })
             .then(response => response.json())
             .then(data => {
+                console.log('User data:', data);
                 console.log(data); 
                 document.getElementById('editName').value = data.name;
                 document.getElementById('editEmail').value = data.email;
@@ -32,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const updatedName = document.getElementById('editName').value;
         const updatedEmail = document.getElementById('editEmail').value;
+
+        console.log('Token:', localStorage.getItem('token'));
 
         fetch('/user/profile/update', {
             method: 'POST',

@@ -1,56 +1,56 @@
 const User = require('../models/User');
-//const bcrypt = require('bcrypt');
-//const session = require('express-session');
-
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.login = async (req, res) => {
     try {
-        // Retrieve user data from request body
         const { email, password } = req.body;
-        console.log('Attempting to log in with:', email, password); // Log the received credentials
 
-        // Find the user by email
         const user = await User.findOne({ email });
-        console.log('User found:', !!user); // Log whether the user was found
         if (!user) {
-            return res.status(401).json({ message: 'Authentication failed' });
+            return res.status(401).json({ message: 'Authentication failed: user not found' });
         }
 
-        // Check if password is correct
+        // Replace plain text comparison with bcrypt if password hashing is implemented
+        // const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = user.password === password;
 
-        const isMatch = user.password === password; // assuming you have a method to compare passwords
-        console.log('Password match:', isMatch); // Log result of password 
         if (!isMatch) {
-            return res.status(401).json({ message: 'Authentication failed' });
-            
+            return res.status(401).json({ message: 'Authentication failed: incorrect password' });
         }
 
-        // Redirect to dashboard page
-        res.json({ message: 'Login successful', redirectTo: '/dashboard.html' });
-
+        // If the user is found and the password matches, create a JWT token
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ message: 'Login successful', token: token, redirectTo: '/dashboard.html' });
     } catch (error) {
-        console.error('Server error during login:', error); 
+        console.error('Server error during login:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 exports.signup = async (req, res) => {
     try {
-        const { email, password, username, name } = req.body; // Capture additional fields
+        const { email, password, username, name } = req.body;
 
-        // Check if user already exists
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
-            return res.status(409).json({ message: 'Email or username already in use' }); // Updated message to include username check
+            return res.status(409).json({ message: 'Email or username already in use' });
         }
 
-        // Hash the password
-        //const salt = await bcrypt.genSalt(10);
-       // const hash = await bcrypt.hash(password, salt);
+        // Hash the password with bcrypt before storing it
+        // const salt = await bcrypt.genSalt(10);
+        // const hash = await bcrypt.hash(password, salt);
 
-        // Create a new user instance and save to DB
-        const user = new User({ email, password, username, name }); // Include new fields in user creation
-        await user.save();
+        // For security, store the hashed password
+        const newUser = new User({
+            email,
+            // password: hash,
+            password, // Use hash instead after uncommenting the bcrypt lines
+            username,
+            name
+        });
+
+        await newUser.save();
 
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
