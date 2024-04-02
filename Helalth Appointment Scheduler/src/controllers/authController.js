@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
 
         // If the user is found and the password matches, create a JWT token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: 'Login successful', token: token, redirectTo: '/dashboard.html' });
+        res.json({ message: 'Login successful', token: token, redirectTo: '/dashboard' });
     } catch (error) {
         console.error('Server error during login:', error);
         res.status(500).json({ message: 'Server error' });
@@ -44,7 +44,6 @@ exports.signup = async (req, res) => {
         // For security, store the hashed password
         const newUser = new User({
             email,
-            // password: hash,
             password, // Use hash instead after uncommenting the bcrypt lines
             username,
             name
