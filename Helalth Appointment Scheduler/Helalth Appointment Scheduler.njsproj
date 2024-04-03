@@ -32,11 +32,15 @@
     <Content Include=".eslintrc" />
     <Content Include="config\db.js" />
     <Content Include="config\twilioConfig.js" />
+    <Content Include="public\bookAppoinments.html" />
     <Content Include="public\css\styles.css" />
     <Content Include="public\dashboard.html" />
+    <Content Include="public\js\bookAppoinments.js" />
     <Content Include="public\js\dashboard.js" />
     <Content Include="public\js\login.js" />
+    <Content Include="public\js\myAppointments.js" />
     <Content Include="public\js\script.js" />
+    <Content Include="public\myAppoinments.html" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />

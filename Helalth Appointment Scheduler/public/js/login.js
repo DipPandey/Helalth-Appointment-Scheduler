@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('userId', data.userId);
                     localStorage.setItem('name', data.name);//storing the name for welcome message
                     
-                    
                      // Store user ID if you send it back from the server
                     window.location.href = data.redirectTo || '/dashboard';
                     

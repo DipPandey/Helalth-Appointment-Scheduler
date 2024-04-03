@@ -8,6 +8,7 @@ const authRoutes = require('./src/routes/authRoutes');
 
 const userRoutes = require('./src/routes/userRoutes'); // Adjust path as necessary
 
+const appointmentRoutes = require('./src/routes/appointmentRoutes');
 
 
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authRoutes);//auth routes
 app.use('/user', userRoutes);//user routes
+app.use('/appointments', appointmentRoutes); // Appointment routes
 
 // Route to serve the index.html file
 app.get('/', (req, res) => {

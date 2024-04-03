@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Book an Appointment</h2>
+        <form id="bookingForm">
+            <!-- Assuming patientId and doctorId would be set by the server or user selection -->
+            <div class="form-group">
+                <label for="appointmentDate">Date:</label>
+                <input type="date" class="form-control" id="appointmentDate" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentTime">Time:</label>
+                <input type="time" class="form-control" id="appointmentTime" name="time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentDuration">Duration:</label>
+                <select class="form-control" id="appointmentDuration" name="duration" required>
+                    <option value="30 minutes">30 Minutes</option>
+                    <option value="60 minutes">1 Hour</option>
+                    <!-- Add more duration options as needed -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentType">Type of Appointment:</label>
+                <select class="form-control" id="appointmentType" name="type" required>
+                    <option value="check-up">Check-Up</option>
+                    <option value="consultation">Consultation</option>
+                    <!-- Add more appointment types as needed -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentDetails">Details:</label>
+                <textarea class="form-control" id="appointmentDetails" name="details" rows="3" placeholder="Enter any details for the appointment."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="appointmentLocation">Location:</label>
+                <input type="text" class="form-control" id="appointmentLocation" name="location" placeholder="Enter the location of the appointment" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap and jQuery libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript for handling booking -->
+    <script src="js/bookAppointment.js"></script>
+</body>
+</html>
