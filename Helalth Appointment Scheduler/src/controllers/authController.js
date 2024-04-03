@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
 
         // If the user is found and the password matches, create a JWT token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ message: 'Login successful', token: token, redirectTo: '/dashboard' });
+        res.json({ message: 'Login successful', token: token, name: user.name, redirectTo: '/dashboard' });
     } catch (error) {
         console.error('Server error during login:', error);
         res.status(500).json({ message: 'Server error' });

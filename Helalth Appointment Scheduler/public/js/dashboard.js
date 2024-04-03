@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const editForm = document.getElementById('editProfile');
         editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
     });
-
+    //using the login name as welcome message
+    const userName = localStorage.getItem('name');
+    if (userName) {
+        // Update the welcome message with the user's name
+        document.querySelector('.user-profile h3').textContent = `Welcome, ${userName}`;
+    }
     // Fetches user profile data from the server
     function loadUserProfile() {
         fetch('/user/profile', {

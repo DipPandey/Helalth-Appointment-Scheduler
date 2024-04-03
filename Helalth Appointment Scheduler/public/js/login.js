@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
+       
         const loginData = { email, password };
 
         fetch('/auth/login', {
@@ -19,9 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.token ) {
+                if (data.token) {
                     localStorage.setItem('token', data.token); // Store the token
                     localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('name', data.name);//storing the name for welcome message
+                    
+                    
                      // Store user ID if you send it back from the server
                     window.location.href = data.redirectTo || '/dashboard';
                     
@@ -34,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Login failed: ' + error.message);
             });
     });
+
 
     if (signupForm) {
         signupForm.addEventListener('submit', (event) => {
@@ -59,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.token) {
                         localStorage.setItem('token', data.token); // Store the token
                         localStorage.setItem('userId', data.userId); // Store user ID if you send it back from the server
-
+                        
                         window.location.href = data.redirectTo || '/dashboard'; // Redirect to the dashboard or provided URL
                     } else {
                         alert(data.message || 'Signup successful, but no token received.');
