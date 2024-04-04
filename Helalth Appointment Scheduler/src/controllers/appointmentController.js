@@ -20,9 +20,11 @@ exports.bookAppointment = async (req, res) => {
         const patientId = req.user._id; // Get patient ID from authenticated user session or token
         const { date, time, duration, type, details, location } = req.body;
 
-        // Validation (ensure data is valid and time slot is available)
-        //const { valid, message } = validateAppointment({ date, time, duration, type, details, location });
-        //if (!valid) return res.status(400).json({ message });
+        //const validation = validateAppointment(req.body);
+       // if (!validation.valid) {
+       //     return res.status(400).json({ message: validation.message });
+        // } 
+       //NOTE: come back to this validation as its not currently working
 
         // Create appointment object
         const newAppointment = new Appointment({

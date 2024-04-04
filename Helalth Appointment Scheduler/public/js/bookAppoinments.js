@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Handle success response, such as redirecting to the appointments page or displaying a success message
                 console.log('Appointment booked successfully:', data);
                 // Redirect to the myAppointments page or display success message
-                // window.location.href = '/myAppointments.html';
+                window.location.href = '/dashboard';
             })
             .catch(error => {
                 // Handle errors, such as displaying an error message to the user

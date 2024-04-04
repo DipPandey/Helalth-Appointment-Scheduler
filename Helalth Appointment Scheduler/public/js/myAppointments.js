@@ -1,40 +1,37 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Function to load current user's appointments
+    const appointmentsContainer = document.getElementById('appointments-container');
+
     function loadAppointments() {
         fetch('/appointments/current', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Failed to load appointments.');
                 }
                 return response.json();
             })
             .then(appointments => {
-                // Render appointments to the page
-                console.log('Current appointments:', appointments);
+                console.log('Appointments loaded:', appointments); // Log the appointments array
                 displayAppointments(appointments);
             })
             .catch(error => {
                 console.error('Failed to load appointments:', error);
+                appointmentsContainer.textContent = 'Failed to load appointments.';
             });
     }
 
-    // Function to display appointments on the page
     function displayAppointments(appointments) {
-        const appointmentsContainer = document.getElementById('appointments-container'); // Replace with your actual container ID
-        // Clear existing appointments
-        appointmentsContainer.innerHTML = '';
-
-        // Create HTML for each appointment and append to the container
+        console.log('Displaying appointments...'); // Log that we are about to display appointments
+        appointmentsContainer.innerHTML = ''; // Clear the container
         appointments.forEach(appointment => {
+            console.log('Appointment:', appointment); // Log each individual appointment
             const appointmentElement = document.createElement('div');
-            // Add class for styling if needed
             appointmentElement.className = 'appointment';
             appointmentElement.innerHTML = `
                 <h3>${appointment.type}</h3>
@@ -42,36 +39,49 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>Time: ${appointment.time}</p>
                 <p>Duration: ${appointment.duration}</p>
                 <p>Status: ${appointment.status}</p>
-                <button onclick="cancelAppointment('${appointment._id}')">Cancel</button>
+                <button class="cancel-appointment-btn" data-appointment-id="${appointment._id}">Cancel</button>
             `;
             appointmentsContainer.appendChild(appointmentElement);
         });
+
+        attachCancelEventListeners(); // Attach event listeners after appointments have been displayed
     }
 
-    // Function to cancel an appointment
-    window.cancelAppointment = function (appointmentId) {
+    function attachCancelEventListeners() {
+        console.log('Attaching cancel event listeners...'); // Log that we are about to attach event listeners
+        const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const appointmentId = this.getAttribute('data-appointment-id');
+                cancelAppointment(appointmentId);
+            });
+        });
+    }
+
+    function cancelAppointment(appointmentId) {
+        console.log('Cancelling appointment:', appointmentId); // Log the appointmentId being cancelled
         fetch(`/appointments/cancel/${appointmentId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok.');
+                    throw new Error('Failed to cancel appointment.');
                 }
                 return response.json();
             })
             .then(() => {
-                console.log('Appointment cancelled successfully');
-                loadAppointments(); // Reload appointments to update the list
+                alert('Appointment cancelled successfully');
+                loadAppointments();
             })
             .catch(error => {
                 console.error('Failed to cancel appointment:', error);
+                alert('Failed to cancel appointment: ' + error.message);
             });
     }
 
-    // Initial load of appointments
-    loadAppointments();
+    loadAppointments(); // Initial load of appointments
 });

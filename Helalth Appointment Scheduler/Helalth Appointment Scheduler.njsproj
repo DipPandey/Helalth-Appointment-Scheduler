@@ -40,7 +40,7 @@
     <Content Include="public\js\login.js" />
     <Content Include="public\js\myAppointments.js" />
     <Content Include="public\js\script.js" />
-    <Content Include="public\myAppoinments.html" />
+    <Content Include="public\myAppointments.html" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
