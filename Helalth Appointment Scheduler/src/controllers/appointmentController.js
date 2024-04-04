@@ -1,17 +1,37 @@
 const Appointment = require('../models/Appointment');
+const mongoose = require('mongoose');
+
+
 const { validateAppointment, canCancelAppointment } = require('../utils/validation'); // Assuming you have a validation utility
 
 exports.getCurrentAppointments = async (req, res) => {
+    // Ensure that we have user data in req.user
+    if (!req.user || !req.user._id) {
+        console.error('User data not found in request.');
+        return res.status(401).json({ message: 'Unauthorized access: No user data.' });
+    }
+
     try {
-        const patientId = req.user._id; // Assuming you have user data in req.user
+        const patientId = req.user._id;
+        console.log("Fetching appointments for patientId:", patientId); // For debugging
+
+        // Ensure that patientId is in the right format (e.g., a MongoDB ObjectId)
+        if (!mongoose.Types.ObjectId.isValid(patientId)) {
+            console.error('Invalid patient ID format.');
+            return res.status(400).json({ message: 'Invalid patient ID format.' });
+        }
+
         const appointments = await Appointment.find({
             patientId: patientId,
             status: 'scheduled',
-            date: { $gte: new Date() } // Only fetch appointments that are scheduled for the future
-        });
+            date: { $gte: new Date() }
+        }).exec(); // Adding exec() to get a full promise back
+
+        console.log("Appointments found:", appointments); // For debugging
         res.json(appointments);
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving appointments', error: error });
+        console.error('Error retrieving appointments:', error);
+        res.status(500).json({ message: 'Error retrieving appointments', error });
     }
 };
 
@@ -21,8 +41,8 @@ exports.bookAppointment = async (req, res) => {
         const { date, time, duration, type, details, location } = req.body;
 
         //const validation = validateAppointment(req.body);
-       // if (!validation.valid) {
-       //     return res.status(400).json({ message: validation.message });
+        //if (!validation.valid) {
+         //  return res.status(400).json({ message: validation.message });
         // } 
        //NOTE: come back to this validation as its not currently working
 
