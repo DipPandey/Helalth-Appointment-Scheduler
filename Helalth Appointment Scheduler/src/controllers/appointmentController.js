@@ -1,35 +1,63 @@
-// appointmentController.js
 const Appointment = require('../models/Appointment');
+const { validateAppointment, canCancelAppointment } = require('../utils/validation'); // Assuming you have a validation utility
 
 exports.getCurrentAppointments = async (req, res) => {
     try {
-        // You need to get the patientId from the token or session
-        const patientId = req.patientId;
-        const appointments = await Appointment.find({ patientId: patientId, status: 'scheduled' });
+        const patientId = req.user._id; // Assuming you have user data in req.user
+        const appointments = await Appointment.find({
+            patientId: patientId,
+            status: 'scheduled',
+            date: { $gte: new Date() } // Only fetch appointments that are scheduled for the future
+        });
         res.json(appointments);
     } catch (error) {
-        res.status(500).json({ message: 'Error retrieving appointments' });
+        res.status(500).json({ message: 'Error retrieving appointments', error: error });
     }
 };
 
-// appointmentController.js
 exports.bookAppointment = async (req, res) => {
     try {
-        const newAppointment = new Appointment(req.body);
+        const patientId = req.user._id; // Get patient ID from authenticated user session or token
+        const { date, time, duration, type, details, location } = req.body;
+
+        // Validation (ensure data is valid and time slot is available)
+        //const { valid, message } = validateAppointment({ date, time, duration, type, details, location });
+        //if (!valid) return res.status(400).json({ message });
+
+        // Create appointment object
+        const newAppointment = new Appointment({
+            patientId,
+            date,
+            time,
+            duration,
+            type,
+            details,
+            location,
+            // other fields like status can be set by default in your schema
+        });
+
+        // Save the new appointment
         await newAppointment.save();
         res.status(201).json({ message: 'Appointment booked successfully', appointment: newAppointment });
     } catch (error) {
-        res.status(500).json({ message: 'Error booking appointment' });
+        res.status(500).json({ message: 'Error booking appointment', error: error });
     }
 };
 
-// appointmentController.js
 exports.cancelAppointment = async (req, res) => {
     try {
         const appointmentId = req.params.appointmentId;
+        const patientId = req.user._id;
+
+        // Check if the appointment can be cancelled by the user
+        const appointment = await Appointment.findById(appointmentId);
+        if (!canCancelAppointment(appointment, patientId)) {
+            return res.status(403).json({ message: 'Not authorized to cancel this appointment' });
+        }
+
         await Appointment.findByIdAndUpdate(appointmentId, { status: 'cancelled' });
         res.json({ message: 'Appointment cancelled successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error cancelling appointment' });
+        res.status(500).json({ message: 'Error cancelling appointment', error: error });
     }
 };

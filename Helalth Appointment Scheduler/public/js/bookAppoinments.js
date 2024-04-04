@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         // Post the form data to the server
-        fetch('/api/appointments/book', { // Replace '/api/appointments/book' with your actual endpoint
+        fetch('/appointments/book', { // Replace '/api/appointments/book' with your actual endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

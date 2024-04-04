@@ -1,53 +1,76 @@
-// myAppointments.js
 document.addEventListener('DOMContentLoaded', function () {
-    const appointmentsContainer = document.getElementById('appointments-container');
 
+    // Function to load current user's appointments
     function loadAppointments() {
-        // Replace with your actual endpoint
-        fetch('/user/appointments/current', {
+        fetch('/appointments/current', {
             method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
+            },
         })
-            .then(response => response.json())
-            .then(appointments => {
-                appointmentsContainer.innerHTML = ''; // Clear the container
-                appointments.forEach(appointment => {
-                    const appointmentEl = document.createElement('div');
-                    appointmentEl.className = 'appointment';
-                    appointmentEl.innerHTML = `
-                    <h5>${appointment.type}</h5>
-                    <p>Date: ${appointment.date} at ${appointment.time}</p>
-                    <p>Duration: ${appointment.duration}</p>
-                    <p>Location: ${appointment.location}</p>
-                    <p>Status: ${appointment.status}</p>
-                    <button onclick="cancelAppointment('${appointment._id}')">Cancel</button>
-                `;
-                    appointmentsContainer.appendChild(appointmentEl);
-                });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
             })
-            .catch(error => console.error('Error loading appointments:', error));
+            .then(appointments => {
+                // Render appointments to the page
+                console.log('Current appointments:', appointments);
+                displayAppointments(appointments);
+            })
+            .catch(error => {
+                console.error('Failed to load appointments:', error);
+            });
     }
 
+    // Function to display appointments on the page
+    function displayAppointments(appointments) {
+        const appointmentsContainer = document.getElementById('appointments-container'); // Replace with your actual container ID
+        // Clear existing appointments
+        appointmentsContainer.innerHTML = '';
+
+        // Create HTML for each appointment and append to the container
+        appointments.forEach(appointment => {
+            const appointmentElement = document.createElement('div');
+            // Add class for styling if needed
+            appointmentElement.className = 'appointment';
+            appointmentElement.innerHTML = `
+                <h3>${appointment.type}</h3>
+                <p>Date: ${new Date(appointment.date).toLocaleDateString()}</p>
+                <p>Time: ${appointment.time}</p>
+                <p>Duration: ${appointment.duration}</p>
+                <p>Status: ${appointment.status}</p>
+                <button onclick="cancelAppointment('${appointment._id}')">Cancel</button>
+            `;
+            appointmentsContainer.appendChild(appointmentElement);
+        });
+    }
+
+    // Function to cancel an appointment
     window.cancelAppointment = function (appointmentId) {
-        // Replace with your actual endpoint
         fetch(`/appointments/cancel/${appointmentId}`, {
             method: 'PATCH',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            }
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
+            },
         })
             .then(response => {
-                if (!response.ok) throw new Error('Failed to cancel appointment');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
                 return response.json();
             })
             .then(() => {
-                alert('Appointment cancelled successfully');
-                loadAppointments(); // Reload appointments
+                console.log('Appointment cancelled successfully');
+                loadAppointments(); // Reload appointments to update the list
             })
-            .catch(error => alert('Error cancelling appointment: ' + error.message));
-    };
+            .catch(error => {
+                console.error('Failed to cancel appointment:', error);
+            });
+    }
 
     // Initial load of appointments
     loadAppointments();

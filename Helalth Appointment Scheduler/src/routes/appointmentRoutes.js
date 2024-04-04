@@ -3,11 +3,12 @@ const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appointmentController');
 
-router.get('/current', appointmentController.getCurrentAppointments);
-// appointmentRoutes.js
-router.post('/book', appointmentController.bookAppointment);
-// appointmentRoutes.js
-router.patch('/cancel/:appointmentId', appointmentController.cancelAppointment);
+const verifyToken = require('../middleware/verifyTokens');
+
+router.get('/current', verifyToken, appointmentController.getCurrentAppointments);
+router.post('/book', verifyToken, appointmentController.bookAppointment);
+router.patch('/cancel/:appointmentId', verifyToken, appointmentController.cancelAppointment);
+
 
 
 module.exports = router;
