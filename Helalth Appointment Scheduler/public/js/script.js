@@ -11,3 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Rest of your dashboard JS code...
 });
+
+// Load the sidebar content from sidebar.html and insert it into the sidebar-container div
+fetch('sidebar.html')
+    .then(response => response.text())
+    .then(sidebarHtml => {
+        document.getElementById('sidebar-container').innerHTML = sidebarHtml;
+    });

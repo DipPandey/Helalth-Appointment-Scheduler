@@ -41,6 +41,7 @@
     <Content Include="public\js\myAppointments.js" />
     <Content Include="public\js\script.js" />
     <Content Include="public\myAppointments.html" />
+    <Content Include="public\sidebar.html" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />

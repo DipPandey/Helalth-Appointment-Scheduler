@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function () {
     // Toggles the edit profile form visibility
     document.getElementById('toggleEditForm').addEventListener('click', function () {

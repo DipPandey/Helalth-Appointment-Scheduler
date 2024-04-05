@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const bookingForm = document.getElementById('bookingForm');
 
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
             location: document.getElementById('appointmentLocation').value
             // patientId and doctorId should be handled server-side or added here if available on the client
         };
+
 
         // Post the form data to the server
         fetch('/appointments/book', { // Replace '/api/appointments/book' with your actual endpoint

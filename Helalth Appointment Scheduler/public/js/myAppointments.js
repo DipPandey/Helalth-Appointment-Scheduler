@@ -1,3 +1,6 @@
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
     const appointmentsContainer = document.getElementById('appointments-container');
