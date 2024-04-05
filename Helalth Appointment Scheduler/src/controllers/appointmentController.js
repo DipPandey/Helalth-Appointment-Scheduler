@@ -76,7 +76,11 @@ exports.cancelAppointment = async (req, res) => {
         const appointmentId = req.params.appointmentId;
         const userId = req.user._id.toString();
 
-        const appointment = await Appointment.findById(appointmentId);
+        const appointment = await Appointment.findByIdAndUpdate(
+            appointmentId,
+            { status: 'cancelled' },
+            { new: true }
+        );
         if (!appointment) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
@@ -96,6 +100,11 @@ exports.cancelAppointment = async (req, res) => {
         res.status(500).json({ message: 'Error cancelling appointment', error });
     }
 };
+
+
+
+
+
 
 // ... utility functions if not in a separate file ...
 

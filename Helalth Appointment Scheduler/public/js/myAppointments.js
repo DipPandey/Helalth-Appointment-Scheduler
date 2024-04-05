@@ -35,39 +35,46 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    function displayAppointments(appointments) {
-        console.log('Displaying appointments...'); // Log that we are about to display appointments
-        appointmentsContainer.innerHTML = ''; // Clear the container
-        appointments.forEach(appointment => {
-            console.log('Appointment:', appointment); // Log each individual appointment
-            const appointmentElement = document.createElement('div');
-            appointmentElement.className = 'appointment';
-            appointmentElement.innerHTML = `
-                <h3>${appointment.type}</h3>
-            <p>Date: ${new Date(appointment.date).toLocaleDateString()}</p>
-            <p>Time: ${appointment.time}</p>
-            <p>Duration: ${appointment.duration}</p>
-            <p>Details: ${appointment.details}</p>  <!-- Add this line -->
-            <p>Location: ${appointment.location}</p>  <!-- Add this line -->
-            <p>Status: ${appointment.status}</p>
-            <button class="cancel-appointment-btn" data-appointment-id="${appointment._id}">Cancel</button>
+   function displayAppointments(appointments) {
+    console.log('Displaying appointments...');
+    const appointmentsContainer = document.getElementById('appointments-container');
+    appointmentsContainer.innerHTML = ''; // Clear the container
+
+    appointments.forEach(appointment => {
+        console.log('Appointment:', appointment);
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${appointment.type}</td>
+            <td>${new Date(appointment.date).toLocaleDateString()}</td>
+            <td>${appointment.time}</td>
+            <td>${appointment.duration}</td>
+            <td>${appointment.details}</td>
+            <td>${appointment.location}</td>
+            <td>${appointment.status}</td>
+            <td>
+                <button class="btn btn-danger cancel-appointment-btn" data-appointment-id="${appointment._id}">
+                    Cancel
+                </button>
+            </td>
         `;
-            appointmentsContainer.appendChild(appointmentElement);
-        });
+        appointmentsContainer.appendChild(row);
+    });
 
-        attachCancelEventListeners(); // Attach event listeners after appointments have been displayed
-    }
+    attachCancelEventListeners();
+}
 
-    function attachCancelEventListeners() {
-        console.log('Attaching cancel event listeners...'); // Log that we are about to attach event listeners
-        const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
-        cancelButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const appointmentId = this.getAttribute('data-appointment-id');
-                cancelAppointment(appointmentId);
-            });
+function attachCancelEventListeners() {
+    console.log('Attaching cancel event listeners...');
+    const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
+    cancelButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const appointmentId = this.getAttribute('data-appointment-id');
+            cancelAppointment(appointmentId);
         });
-    }
+    });
+}
+
 
     // ... other code ...
 
