@@ -58,54 +58,66 @@ document.addEventListener('DOMContentLoaded', function () {
                 </button>
             </td>
         `;
+
         appointmentsContainer.appendChild(row);
     });
 
     attachCancelEventListeners();
 }
 
-function attachCancelEventListeners() {
-    console.log('Attaching cancel event listeners...');
-    const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
-    cancelButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const appointmentId = this.getAttribute('data-appointment-id');
-            cancelAppointment(appointmentId);
+    function attachCancelEventListeners() {
+        const cancelButtons = document.querySelectorAll('.cancel-appointment-btn');
+        cancelButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const appointmentId = this.getAttribute('data-appointment-id');
+                // Confirmation dialog
+                if (confirm('Are you sure you want to cancel this appointment?')) {
+                    cancelAppointment(appointmentId);
+                }
+            });
         });
-    });
-}
+    }
 
 
     // ... other code ...
 
     function cancelAppointment(appointmentId) {
-        // Log for debugging
-        console.log('Attempting to cancel appointment:', appointmentId);
+        // Display a confirmation dialog
+        const isConfirmed = confirm('Do you want to cancel this appointment?');
 
-        fetch(`/appointments/cancel/${appointmentId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    // Throw an error to be caught in the catch block
-                    throw new Error(`Failed to cancel appointment with status: ${response.status}`);
-                }
-                return response.json();
+        // Proceed only if the user confirmed
+        if (isConfirmed) {
+            // Log for debugging
+            console.log('Attempting to cancel appointment:', appointmentId);
+
+            fetch(`/appointments/cancel/${appointmentId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
             })
-            .then(() => {
-                alert('Appointment cancelled successfully');
-                loadAppointments(); // Refresh the list of appointments
-            })
-            .catch(error => {
-                console.error('Error when attempting to cancel appointment:', error);
-                alert('Error when attempting to cancel appointment: ' + error.message);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        // Throw an error to be caught in the catch block
+                        throw new Error(`Failed to cancel appointment with status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    alert('Appointment cancelled successfully');
+                    loadAppointments(); // Refresh the list of appointments
+                })
+                .catch(error => {
+                    console.error('Error when attempting to cancel appointment:', error);
+                    alert('Error when attempting to cancel appointment: ' + error.message);
+                });
+        } else {
+            console.log('Cancellation aborted by the user.');
+        }
     }
 
+    // Attach event listeners dynamically for the 'Cancel' button within the displayAppointments function
 
     loadAppointments(); // Initial load of appointments
 });
