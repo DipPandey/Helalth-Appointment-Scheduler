@@ -69,20 +69,33 @@ exports.bookAppointment = async (req, res) => {
     }
 };
 
+// ... other controller functions ...
+
 exports.cancelAppointment = async (req, res) => {
     try {
         const appointmentId = req.params.appointmentId;
-        const patientId = req.user._id;
+        const userId = req.user._id.toString();
 
-        // Check if the appointment can be cancelled by the user
         const appointment = await Appointment.findById(appointmentId);
-        if (!canCancelAppointment(appointment, patientId)) {
-            return res.status(403).json({ message: 'Not authorized to cancel this appointment' });
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
         }
 
-        await Appointment.findByIdAndUpdate(appointmentId, { status: 'cancelled' });
+        // Assuming canCancelAppointment is a utility function you've written
+        if (!canCancelAppointment(appointment, userId)) {
+            return res.status(403).json({ message: 'Cannot cancel this appointment' });
+        }
+
+        // Update the appointment to be 'cancelled'
+        appointment.status = 'cancelled';
+        await appointment.save();
+        console.log("Chosen Appointment cancelled Successfully");
         res.json({ message: 'Appointment cancelled successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error cancelling appointment', error: error });
+        console.error('Error cancelling appointment:', error);
+        res.status(500).json({ message: 'Error cancelling appointment', error });
     }
 };
+
+// ... utility functions if not in a separate file ...
+

@@ -69,8 +69,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ... other code ...
+
     function cancelAppointment(appointmentId) {
-        console.log('Cancelling appointment:', appointmentId); // Log the appointmentId being cancelled
+        // Log for debugging
+        console.log('Attempting to cancel appointment:', appointmentId);
+
         fetch(`/appointments/cancel/${appointmentId}`, {
             method: 'PATCH',
             headers: {
@@ -80,19 +84,21 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to cancel appointment.');
+                    // Throw an error to be caught in the catch block
+                    throw new Error(`Failed to cancel appointment with status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(() => {
                 alert('Appointment cancelled successfully');
-                loadAppointments();
+                loadAppointments(); // Refresh the list of appointments
             })
             .catch(error => {
-                console.error('Failed to cancel appointment:', error);
-                alert('Failed to cancel appointment: ' + error.message);
+                console.error('Error when attempting to cancel appointment:', error);
+                alert('Error when attempting to cancel appointment: ' + error.message);
             });
     }
+
 
     loadAppointments(); // Initial load of appointments
 });
