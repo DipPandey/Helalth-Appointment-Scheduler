@@ -2,33 +2,36 @@ const Appointment = require('../models/Appointment');
 const mongoose = require('mongoose');
 
 
-const { validateAppointment, canCancelAppointment } = require('../utils/validation'); // Assuming you have a validation utility
+const { canCancelAppointment } = require('../utils/validation');
 
 exports.getCurrentAppointments = async (req, res) => {
-    // Ensure that we have user data in req.user
     if (!req.user || !req.user._id) {
         console.error('User data not found in request.');
         return res.status(401).json({ message: 'Unauthorized access: No user data.' });
     }
 
     try {
-        const patientId = req.user._id;
-        console.log("Fetching appointments for patientId:", patientId); // For debugging
+        const patientId = req.user._id.toString();
+        console.log("Fetching appointments for patientId:", patientId);
 
-        // Ensure that patientId is in the right format (e.g., a MongoDB ObjectId)
         if (!mongoose.Types.ObjectId.isValid(patientId)) {
             console.error('Invalid patient ID format.');
             return res.status(400).json({ message: 'Invalid patient ID format.' });
         }
 
-        const appointments = await Appointment.find({
-            patientId: patientId,
-            status: 'scheduled',
-            date: { $gte: new Date() }
-        }).exec(); // Adding exec() to get a full promise back
+        // We remove the date criteria to fetch all appointments for the patient
+        const appointments = await Appointment.find({ patientId: patientId, status: 'scheduled' }).exec();
 
-        console.log("Appointments found:", appointments); // For debugging
-        res.json(appointments);
+        // Filter out past appointments if necessary
+        const currentAppointments = appointments.filter(appointment => {
+            const appointmentDate = new Date(appointment.date);
+            return appointmentDate >= new Date();
+        });
+
+        console.log("Appointments found:", currentAppointments.length); // Log the number of current appointments found
+        currentAppointments.forEach(app => console.log(app)); // Log each appointment object
+
+        res.json(currentAppointments); // Send current appointments
     } catch (error) {
         console.error('Error retrieving appointments:', error);
         res.status(500).json({ message: 'Error retrieving appointments', error });

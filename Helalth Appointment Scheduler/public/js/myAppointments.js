@@ -3,6 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const appointmentsContainer = document.getElementById('appointments-container');
 
     function loadAppointments() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found.');
+            appointmentsContainer.textContent = 'You must be logged in to see appointments.';
+            return;
+        }
+
         fetch('/appointments/current', {
             method: 'GET',
             headers: {
@@ -12,7 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to load appointments.');
+                    // Log the response status and status text
+                    console.error('Failed to load appointments:', response.status, response.statusText);
+                    throw new Error(`Server responded with status: ${response.status}`);
                 }
                 return response.json();
             })
@@ -22,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Failed to load appointments:', error);
-                appointmentsContainer.textContent = 'Failed to load appointments.';
+                appointmentsContainer.textContent = `Failed to load appointments: ${error.message}`;
             });
     }
 
@@ -35,12 +44,14 @@ document.addEventListener('DOMContentLoaded', function () {
             appointmentElement.className = 'appointment';
             appointmentElement.innerHTML = `
                 <h3>${appointment.type}</h3>
-                <p>Date: ${new Date(appointment.date).toLocaleDateString()}</p>
-                <p>Time: ${appointment.time}</p>
-                <p>Duration: ${appointment.duration}</p>
-                <p>Status: ${appointment.status}</p>
-                <button class="cancel-appointment-btn" data-appointment-id="${appointment._id}">Cancel</button>
-            `;
+            <p>Date: ${new Date(appointment.date).toLocaleDateString()}</p>
+            <p>Time: ${appointment.time}</p>
+            <p>Duration: ${appointment.duration}</p>
+            <p>Details: ${appointment.details}</p>  <!-- Add this line -->
+            <p>Location: ${appointment.location}</p>  <!-- Add this line -->
+            <p>Status: ${appointment.status}</p>
+            <button class="cancel-appointment-btn" data-appointment-id="${appointment._id}">Cancel</button>
+        `;
             appointmentsContainer.appendChild(appointmentElement);
         });
 

@@ -46,6 +46,13 @@ app.get('/dashboard', (req, res) => {
     // Replace 'path/to/dashboard.html' with the actual path to your dashboard HTML file
     res.sendFile(path.join(__dirname, 'public' , 'dashboard.html'));
 });
+app.get('/myAppointments', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'myAppointments.html'));
+});
+app.get('/bookAppointments', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'bookAppointments.html'));
+});
+
 
 
 
