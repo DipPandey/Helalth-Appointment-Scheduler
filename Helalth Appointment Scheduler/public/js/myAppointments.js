@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-   function displayAppointments(appointments) {
+    function displayAppointments(appointments) {
+
     console.log('Displaying appointments...');
     const appointmentsContainer = document.getElementById('appointments-container');
     appointmentsContainer.innerHTML = ''; // Clear the container
