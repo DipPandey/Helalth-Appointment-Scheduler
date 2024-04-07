@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update the welcome message with the user's name
         document.querySelector('.user-profile h3').textContent = `Welcome, ${userName}`;
     }
+
+
     // Fetches user profile data from the server
     function loadUserProfile() {
         fetch('/user/profile', {
@@ -68,6 +70,54 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
+    loadUpcomingAppointments(); // This wi
     
 
 });
+
+// Function to fetch and display upcoming appointments
+function loadUpcomingAppointments() {
+    fetch('/appointments/upcoming', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        },
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch upcoming appointments');
+            return response.json();
+        })
+        .then(upcomingAppointments => {
+            displayUpcomingAppointments(upcomingAppointments);
+        })
+        .catch(error => console.error('Error fetching upcoming appointments:', error));
+}
+
+function displayUpcomingAppointments(upcomingAppointments) {
+    const upcomingContainer = document.getElementById('upcomingAppointments');
+    upcomingContainer.innerHTML = ''; // Clear existing content
+
+    if (upcomingAppointments.length > 0) {
+        upcomingAppointments.forEach(appointment => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card upcoming-appointment';
+            cardDiv.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${appointment.type}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${new Date(appointment.date).toLocaleDateString()} at ${appointment.time}</h6>
+                    <p class="card-text">Duration: ${appointment.duration}</p>
+                    <p class="card-text">Details: ${appointment.details}</p>
+                    <p class="card-text">Location: ${appointment.location}</p>
+                    <a href="#" class="card-link">Reschedule</a>
+                    <a href="myAppointments.html" class="card-link">Cancel</a>
+                    <a href="" class="card-link">Check-In online</a>
+                </div>
+            `;
+            upcomingContainer.appendChild(cardDiv);
+        });
+    } else {
+        upcomingContainer.innerHTML = '<p class="text-muted">No upcoming appointments.</p>';
+    }
+}
+

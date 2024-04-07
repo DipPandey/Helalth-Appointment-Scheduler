@@ -101,6 +101,37 @@ exports.cancelAppointment = async (req, res) => {
     }
 };
 
+// appointmentController.js
+//funtion to get the upcoming appointments
+exports.getUpcomingAppointments = async (req, res) => {
+    const patientId = req.user._id;
+
+    try {
+        // Fetch all scheduled appointments for the patient
+        const allAppointments = await Appointment.find({
+            patientId: patientId,
+            status: 'scheduled'
+        }).sort({ date: 1 }); // Still a good idea to sort them by date
+
+        // Filter appointments to only include those from today onwards
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize today's date to midnight for comparison
+
+        const upcomingAppointments = allAppointments.filter(appointment => {
+            const appointmentDate = new Date(appointment.date);
+            return appointmentDate >= today;
+        });
+
+        res.json(upcomingAppointments);
+    } catch (error) {
+        console.error('Error retrieving upcoming appointments:', error);
+        res.status(500).json({ message: 'Error retrieving upcoming appointments', error });
+    }
+};
+
+
+
+
 
 
 
