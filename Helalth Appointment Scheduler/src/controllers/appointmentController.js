@@ -129,6 +129,40 @@ exports.getUpcomingAppointments = async (req, res) => {
     }
 };
 
+// In appointmentController.js
+exports.rescheduleAppointment = async (req, res) => {
+    const { appointmentId } = req.params;
+    const { newDate, newTime } = req.body; // Expecting new date and time in the request body
+    try {
+        const updatedAppointment = await Appointment.findByIdAndUpdate(appointmentId,
+            { date: newDate, time: newTime },
+            { new: true }
+        );
+        if (!updatedAppointment) {
+            return res.status(404).json({ message: 'Appointment not found.' });
+        }
+        res.json({ message: 'Appointment rescheduled successfully', appointment: updatedAppointment });
+    } catch (error) {
+        res.status(500).json({ message: 'Error rescheduling appointment', error: error });
+    }
+};
+
+exports.checkInAppointment = async (req, res) => {
+    const { appointmentId } = req.params;
+    try {
+        const checkedInAppointment = await Appointment.findByIdAndUpdate(appointmentId,
+            { checkedIn: true },
+            { new: true }
+        );
+        if (!checkedInAppointment) {
+            return res.status(404).json({ message: 'Appointment not found.' });
+        }
+        res.json({ message: 'Checked-in successfully', appointment: checkedInAppointment });
+    } catch (error) {
+        res.status(500).json({ message: 'Error checking in', error: error });
+    }
+};
+
 
 
 
