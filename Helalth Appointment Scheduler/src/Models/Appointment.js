@@ -7,6 +7,10 @@ const appointmentSchema = new mongoose.Schema({
     time: String,
     date: String,
     duration: String,
+    checkedIn: {
+        type: Boolean,
+        default: false,
+    },
     status: {
         type: String,
         enum: ['scheduled', 'cancelled', 'completed'],

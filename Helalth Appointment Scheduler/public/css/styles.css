@@ -103,5 +103,11 @@ footer {
     margin-bottom: 20px;
 }
 
+    /* Additional styling for checked-in appointment cards */
+    .upcoming-appointment.border-success {
+        border-width: 2px; /* Make the border thicker */
+        background-color: #fad8d8; /* Light green background */
+    }
+
 /* Optionally add more custom styling as needed */
 

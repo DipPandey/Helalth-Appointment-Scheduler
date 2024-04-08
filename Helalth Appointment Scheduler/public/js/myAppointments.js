@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${appointment.details}</td>
             <td>${appointment.location}</td>
             <td>${appointment.status}</td>
+            <td>${appointment.CheckedIn}</td>
             <td>
                 <button class="btn btn-danger cancel-appointment-btn" data-appointment-id="${appointment._id}">
                     Cancel

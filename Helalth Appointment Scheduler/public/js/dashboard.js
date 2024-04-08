@@ -1,3 +1,4 @@
+/* global $ */
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -94,16 +95,52 @@ function loadUpcomingAppointments() {
         .catch(error => console.error('Error fetching upcoming appointments:', error));
 }
 
+function cancelAppointment(appointmentId) {
+    // Display a confirmation dialog
+    const isConfirmed = confirm('Do you want to cancel this appointment?');
+
+    // Proceed only if the user confirmed
+    if (isConfirmed) {
+        // Log for debugging
+        console.log('Attempting to cancel appointment:', appointmentId);
+
+        fetch(`/appointments/cancel/${appointmentId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // Throw an error to be caught in the catch block
+                    throw new Error(`Failed to cancel appointment with status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(() => {
+                alert('Appointment cancelled successfully');
+                loadUpcomingAppointments();
+                $('#cancelConfirmationModal').modal('hide'); // Hide the modal after confirmation
+            })
+            .catch(error => {
+                console.error('Error when attempting to cancel appointment:', error);
+                alert('Error when attempting to cancel appointment: ' + error.message);
+            });
+    } else {
+        console.log('Cancellation aborted by the user.');
+    }
+}
+
 function displayUpcomingAppointments(upcomingAppointments) {
     const upcomingContainer = document.getElementById('upcomingAppointments');
     upcomingContainer.innerHTML = ''; // Clear existing content
 
     if (upcomingAppointments.length > 0) {
         upcomingAppointments.forEach(appointment => {
-
-            
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card upcoming-appointment';
+            cardDiv.setAttribute('data-appointment-id', appointment._id); // Set data attribute
             cardDiv.innerHTML = `
                 <div class="card-body">
                     <h5 class="card-title">${appointment.type}</h5>
@@ -113,26 +150,63 @@ function displayUpcomingAppointments(upcomingAppointments) {
                     <p class="card-text">Location: ${appointment.location}</p>
                     <button class="btn btn-outline-primary btn-sm card-link-reschedule" data-id="${appointment._id}">Reschedule</button>
                     <button class="btn btn-outline-danger btn-sm card-link-cancel" data-id="${appointment._id}">Cancel</button>
+                    <div class="check-in-status">${appointment.checkedIn ? 'Checked In' : ''}</div> <!-- Check-in status indicator -->
                     <button class="btn btn-outline-success btn-sm card-link-check-in" data-id="${appointment._id}">Check-In Online</button>
                 </div>
-
-
             `;
-            // Attach event listeners for new buttons
-            const rescheduleBtn = cardDiv.querySelector('.card-link-reschedule');
-
-            const checkInBtn = cardDiv.querySelector('.card-link-check-in');
-
-            rescheduleBtn.addEventListener('click', () => handleReschedule(appointment._id));
-
-            checkInBtn.addEventListener('click', () => handleCheckIn(appointment._id));
 
             upcomingContainer.appendChild(cardDiv);
         });
+
+        // Attach event listeners after elements are added to the DOM
+        document.querySelectorAll('.card-link-reschedule').forEach(button => {
+            button.addEventListener('click', () => handleReschedule(button.getAttribute('data-id')));
+        });
+
+        document.querySelectorAll('.card-link-cancel').forEach(button => {
+            button.addEventListener('click', function () {
+                const appointmentId = this.getAttribute('data-id');
+                $('#cancelConfirmationModal').modal('show'); // Show the modal
+
+                document.getElementById('confirmCancelBtn').onclick = () => {
+                    cancelAppointment(appointmentId, () => {
+                        // Update the UI to indicate the appointment has been cancelled
+                        const appointmentCard = document.querySelector(`.upcoming-appointment[data-appointment-id="${appointmentId}"]`);
+                        if (appointmentCard) {
+                            // Example: Add a "Cancelled" badge
+                            const statusDiv = appointmentCard.querySelector('.check-in-status');
+                            if (statusDiv) {
+                                statusDiv.innerHTML = '<span class="badge badge-danger">Cancelled</span>';
+                            } else {
+                                // If there's no status div, create one
+                                const newStatusDiv = document.createElement('div');
+                                newStatusDiv.className = 'check-in-status';
+                                newStatusDiv.innerHTML = '<span class="badge badge-danger">Cancelled</span>';
+                                appointmentCard.querySelector('.card-body').appendChild(newStatusDiv);
+                            }
+                        }
+
+                        $('#cancelConfirmationModal').modal('hide'); // Hide the modal after confirmation
+                        
+                    });
+                };
+            });
+            
+        });
+
+
+        document.querySelectorAll('.card-link-check-in').forEach(button => {
+            button.addEventListener('click', () => handleCheckIn(button.getAttribute('data-id')));
+        });
+
+        // Assuming you already have a cancel event handler similar to reschedule and check-in
     } else {
         upcomingContainer.innerHTML = '<p class="text-muted">No upcoming appointments.</p>';
     }
 }
+
+
+
 
 function handleReschedule(appointmentId) {
     console.log('Rescheduling appointment:', appointmentId);
@@ -189,6 +263,21 @@ function handleCheckIn(appointmentId) {
         .then(data => {
             console.log(data);
             alert('Checked in successfully.');
+
+
+            const appointmentCard = document.querySelector(`.upcoming-appointment[data-appointment-id="${appointmentId}"]`);
+            let checkInStatus = appointmentCard.querySelector('.check-in-status');
+            if (!checkInStatus) {
+                checkInStatus = document.createElement('span');
+                checkInStatus.className = 'check-in-status badge badge-success ml-2'; // Using Bootstrap badge for styling
+                appointmentCard.querySelector('.card-body').appendChild(checkInStatus); // Assuming .card-body exists
+            }
+            checkInStatus.textContent = 'You are checked-In for your appointment'; // Update check-in status text
+            // Show the check-in success modal
+            $('#checkInSuccessModal').modal('show');
+
+            // Optionally, add more visual cues
+            appointmentCard.classList.add('border-success');
             // Optionally update the UI here to reflect the check-in
         })
         .catch(error => {
