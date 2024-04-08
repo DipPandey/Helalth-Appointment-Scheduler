@@ -42,12 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log('Displaying appointments...');
     const appointmentsContainer = document.getElementById('appointments-container');
-    appointmentsContainer.innerHTML = ''; // Clear the container
+        appointmentsContainer.innerHTML = ''; // Clear the container
+
+        
 
     appointments.forEach(appointment => {
         console.log('Appointment:', appointment);
         const row = document.createElement('tr');
-        
+        // Format the checked-in status for display
+        const checkInStatus = appointment.checkedIn ? 'Yes' : 'No';
         row.innerHTML = `
             <td>${appointment.type}</td>
             <td>${new Date(appointment.date).toLocaleDateString()}</td>
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${appointment.details}</td>
             <td>${appointment.location}</td>
             <td>${appointment.status}</td>
-            <td>${appointment.CheckedIn}</td>
+            <td>${appointment.checkInStatus}</td>
             <td>
                 <button class="btn btn-danger cancel-appointment-btn" data-appointment-id="${appointment._id}">
                     Cancel
