@@ -49,8 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
     appointments.forEach(appointment => {
         console.log('Appointment:', appointment);
         const row = document.createElement('tr');
-        // Format the checked-in status for display
-        const checkInStatus = appointment.checkedIn ? 'Yes' : 'No';
+        // Format the checked-in status for display with Bootstrap badges
+        const checkInStatus = appointment.checkedIn
+            ? '<span class="badge badge-success">Checked In</span>' // Green badge for checked-in status
+            : '<span class="badge badge-secondary">Not Checked In</span>'; //red badge for not checked in
         row.innerHTML = `
             <td>${appointment.type}</td>
             <td>${new Date(appointment.date).toLocaleDateString()}</td>
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${appointment.details}</td>
             <td>${appointment.location}</td>
             <td>${appointment.status}</td>
-            <td>${appointment.checkInStatus}</td>
+            <td>${checkInStatus}</td>
             <td>
                 <button class="btn btn-danger cancel-appointment-btn" data-appointment-id="${appointment._id}">
                     Cancel
@@ -124,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Cancellation aborted by the user.');
         }
     }
+
+
 
     // Attach event listeners dynamically for the 'Cancel' button within the displayAppointments function
 

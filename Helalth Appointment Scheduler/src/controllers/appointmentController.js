@@ -147,6 +147,7 @@ exports.rescheduleAppointment = async (req, res) => {
     }
 };
 
+
 exports.checkInAppointment = async (req, res) => {
     const { appointmentId } = req.params;
     try {

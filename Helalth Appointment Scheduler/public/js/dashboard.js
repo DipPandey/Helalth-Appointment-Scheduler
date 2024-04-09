@@ -156,12 +156,15 @@ function displayUpcomingAppointments(upcomingAppointments) {
             `;
 
             upcomingContainer.appendChild(cardDiv);
+
+            // Attach the reschedule event listener here
+            const rescheduleBtn = cardDiv.querySelector('.card-link-reschedule');
+            rescheduleBtn.addEventListener('click', function () {
+                handleReschedule(this.getAttribute('data-id'));
+            });
         });
 
-        // Attach event listeners after elements are added to the DOM
-        document.querySelectorAll('.card-link-reschedule').forEach(button => {
-            button.addEventListener('click', () => handleReschedule(button.getAttribute('data-id')));
-        });
+        
 
         document.querySelectorAll('.card-link-cancel').forEach(button => {
             button.addEventListener('click', function () {
@@ -191,6 +194,7 @@ function displayUpcomingAppointments(upcomingAppointments) {
                     });
                 };
             });
+
             
         });
 
@@ -207,13 +211,17 @@ function displayUpcomingAppointments(upcomingAppointments) {
 
 
 
-
 function handleReschedule(appointmentId) {
     console.log('Rescheduling appointment:', appointmentId);
 
     // Show the reschedule modal
     const rescheduleModal = document.getElementById('rescheduleModal');
     rescheduleModal.style.display = 'block';
+
+    // Attach event listeners after elements are added to the DOM
+    document.querySelectorAll('.card-link-reschedule').forEach(button => {
+        button.addEventListener('click', () => handleReschedule(button.getAttribute('data-id')));
+    });
 
     // When the user submits the new date/time
     document.getElementById('rescheduleForm').onsubmit = (e) => {
@@ -239,6 +247,7 @@ function handleReschedule(appointmentId) {
             .then(data => {
                 console.log(data);
                 alert('Appointment rescheduled successfully.');
+                loadUpcomingAppointments();
                 // Refresh the appointments list here
             })
             .catch(error => {
