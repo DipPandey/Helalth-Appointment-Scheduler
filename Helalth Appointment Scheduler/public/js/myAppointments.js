@@ -49,6 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
     appointments.forEach(appointment => {
         console.log('Appointment:', appointment);
         const row = document.createElement('tr');
+
+        // Determine the display status for the appointment
+        let displayStatus = appointment.status; // Default status
+        if (appointment.checkedIn) {
+            displayStatus = 'Completed'; // Change to 'Completed' if checked in
+        }
+
         // Format the checked-in status for display with Bootstrap badges
         const checkInStatus = appointment.checkedIn
             ? '<span class="badge badge-success">Checked In</span>' // Green badge for checked-in status
@@ -60,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${appointment.duration}</td>
             <td>${appointment.details}</td>
             <td>${appointment.location}</td>
-            <td>${appointment.status}</td>
+            <td>${displayStatus}</td>
             <td>${checkInStatus}</td>
             <td>
                 <button class="btn btn-danger cancel-appointment-btn" data-appointment-id="${appointment._id}">
