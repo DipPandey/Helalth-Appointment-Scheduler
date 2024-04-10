@@ -129,23 +129,30 @@ exports.getUpcomingAppointments = async (req, res) => {
     }
 };
 
-// In appointmentController.js
+// Add this to your appointmentController.js
+
 exports.rescheduleAppointment = async (req, res) => {
     const { appointmentId } = req.params;
-    const { newDate, newTime } = req.body; // Expecting new date and time in the request body
+    const { newDate, newTime } = req.body;
+
     try {
-        const updatedAppointment = await Appointment.findByIdAndUpdate(appointmentId,
-            { date: newDate, time: newTime },
-            { new: true }
-        );
+        // Validate newDate and newTime here if necessary
+
+        const updatedAppointment = await Appointment.findByIdAndUpdate(appointmentId, {
+            date: newDate,
+            time: newTime
+        }, { new: true });
+
         if (!updatedAppointment) {
-            return res.status(404).json({ message: 'Appointment not found.' });
+            return res.status(404).json({ message: 'Appointment not found' });
         }
+
         res.json({ message: 'Appointment rescheduled successfully', appointment: updatedAppointment });
     } catch (error) {
-        res.status(500).json({ message: 'Error rescheduling appointment', error: error });
+        res.status(500).json({ message: 'Error rescheduling appointment', error });
     }
 };
+
 
 
 exports.checkInAppointment = async (req, res) => {

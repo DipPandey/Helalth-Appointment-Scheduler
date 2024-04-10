@@ -162,6 +162,20 @@ function displayUpcomingAppointments(upcomingAppointments) {
             rescheduleBtn.addEventListener('click', function () {
                 handleReschedule(this.getAttribute('data-id'));
             });
+            // Attach the reschedule event listener
+            document.querySelectorAll('.card-link-reschedule').forEach(button => {
+                button.addEventListener('click', function () {
+                    const appointmentId = this.getAttribute('data-id');
+                    handleReschedule(appointmentId);
+                });
+            });
+            // Attach the reschedule event listener
+            document.querySelectorAll('.card-link-reschedule').forEach(button => {
+                button.addEventListener('click', function () {
+                    const appointmentId = this.getAttribute('data-id');
+                    handleReschedule(appointmentId);
+                });
+            });
         });
 
         
@@ -210,33 +224,20 @@ function displayUpcomingAppointments(upcomingAppointments) {
 }
 
 
+// This function should be inside your dashboard.js or equivalent file
 
 function handleReschedule(appointmentId) {
-    console.log('Rescheduling appointment:', appointmentId);
+    const rescheduleModal = $('#rescheduleModal');
+    rescheduleModal.modal('show');
 
-    // Show the reschedule modal
-    const rescheduleModal = document.getElementById('rescheduleModal');
-    rescheduleModal.style.display = 'block';
-
-    // Attach event listeners after elements are added to the DOM
-    document.querySelectorAll('.card-link-reschedule').forEach(button => {
-        button.addEventListener('click', () => handleReschedule(button.getAttribute('data-id')));
-    });
-
-    // When the user submits the new date/time
-    document.getElementById('rescheduleForm').onsubmit = (e) => {
+    // Submit new reschedule time
+    $('#rescheduleForm').off('submit').on('submit', function (e) {
         e.preventDefault();
+        const newDate = $('#newDateInput').val();
+        const newTime = $('#newTimeInput').val();
 
-        // Get the new date and time from the form
-        const newDate = document.getElementById('newDateInput').value;
-        const newTime = document.getElementById('newTimeInput').value;
-
-        // Close the modal
-        rescheduleModal.style.display = 'none';
-
-        // Make an API call to reschedule
         fetch(`/appointments/reschedule/${appointmentId}`, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -245,17 +246,18 @@ function handleReschedule(appointmentId) {
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                alert('Appointment rescheduled successfully.');
+                alert('Appointment rescheduled successfully');
+                rescheduleModal.modal('hide');
+                // Refresh the upcoming appointments list
                 loadUpcomingAppointments();
-                // Refresh the appointments list here
             })
             .catch(error => {
-                console.error('Failed to reschedule appointment:', error);
-                alert('Failed to reschedule appointment.');
+                alert('Failed to reschedule appointment');
+                console.error('Reschedule error:', error);
             });
-    };
+    });
 }
+
 
 function handleCheckIn(appointmentId) {
     console.log('Checking in for appointment:', appointmentId);
