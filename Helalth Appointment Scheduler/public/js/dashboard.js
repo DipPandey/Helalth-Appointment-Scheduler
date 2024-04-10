@@ -162,13 +162,7 @@ function displayUpcomingAppointments(upcomingAppointments) {
             rescheduleBtn.addEventListener('click', function () {
                 handleReschedule(this.getAttribute('data-id'));
             });
-            // Attach the reschedule event listener
-            document.querySelectorAll('.card-link-reschedule').forEach(button => {
-                button.addEventListener('click', function () {
-                    const appointmentId = this.getAttribute('data-id');
-                    handleReschedule(appointmentId);
-                });
-            });
+            
             // Attach the reschedule event listener
             document.querySelectorAll('.card-link-reschedule').forEach(button => {
                 button.addEventListener('click', function () {
