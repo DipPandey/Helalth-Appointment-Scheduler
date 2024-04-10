@@ -1,4 +1,4 @@
-const MedicalRecord = require('../models/MedicalRecord'); // Assuming a Mongoose model is set up
+const MedicalRecord = require('../models/mrecords'); // Assuming a Mongoose model is set up
 
 exports.uploadMedicalRecord = async (req, res) => {
     try {
