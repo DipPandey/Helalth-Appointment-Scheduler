@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const medicalRecordController = require('../controllers/medicalRecordController');
 const verifyToken = require('../middleware/verifyTokens');
-const multer = require('multer'); // Assuming Multer for file uploads
+const multer = require('multer');
 
 const upload = multer({ dest: 'uploads/' }); // Configure Multer
 

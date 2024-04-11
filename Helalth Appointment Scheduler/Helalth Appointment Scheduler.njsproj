@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="config\" />
+    <Folder Include="uploads\" />
     <Folder Include="public\" />
     <Folder Include="public\css\" />
     <Folder Include="public\js\" />

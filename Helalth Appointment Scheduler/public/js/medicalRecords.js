@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to load existing medical records
     function loadMedicalRecords() {
-        fetch('/api/medicalRecords', {
+        fetch('/mrecords/', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     uploadForm.onsubmit = function (event) {
         event.preventDefault();
         const formData = new FormData(uploadForm);
-        fetch('/api/medicalRecords/upload', {
+        fetch('/mrecords/upload', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),

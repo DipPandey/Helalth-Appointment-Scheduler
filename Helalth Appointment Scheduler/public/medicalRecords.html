@@ -3,30 +3,42 @@
 <head>
     <!-- ...other meta tags... -->
     <title>Medical Records - Healthcare Appointment Scheduler</title>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- ...other links and stylesheets... -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Include sidebar here -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-1" id="sidebar-container">
+                <!-- Sidebar content here -->
+                <!-- Add sidebar links or content -->
+            </div>
 
-    <div class="container mt-5">
-        <h2 class="mb-4">Medical Records</h2>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Upload New Record</button>
+            <!-- Page Content -->
+            <div class="col-md-9">
+                <h2 class="mt-5 mb-4">Your Medical Records</h2>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">Upload New Record</button>
 
-        <!-- List uploaded records in a table -->
-        <div class="table-responsive mt-4">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Record Name</th>
-                        <th>Date Uploaded</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="recordsList">
-                    <!-- Records will be listed here -->
-                </tbody>
-            </table>
+                <!-- List uploaded records in a table -->
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Record Name</th>
+                                <th>Date Uploaded</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordsList">
+                            <!-- Records will be listed here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -56,10 +68,12 @@
         </div>
     </div>
 
-    <!-- ...scripts... -->
+    <!-- Bootstrap and jQuery libraries -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- ...other scripts... -->
+    <!-- Custom JavaScript for Interactivity -->
+    <script src="js/script.js"></script>
+    <!-- ...other scripts as needed... -->
 </body>
 </html>
