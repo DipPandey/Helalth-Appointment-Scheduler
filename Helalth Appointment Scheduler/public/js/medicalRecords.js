@@ -2,9 +2,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const uploadForm = document.getElementById('uploadForm');
     const recordsList = document.getElementById('recordsList');
 
-    // Function to load existing medical records
+    function displayRecords(records) {
+        const rows = records.map(record => {
+            return `
+                <tr>
+                    <td>${record.name}</td>
+                    <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
+                    <td>
+                        <a href="/uploads/${record.filePath}" class="btn btn-sm btn-primary" target="_blank">View</a>
+                        <button class="btn btn-sm btn-primary" onclick="downloadRecord('${record._id}')">Download</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteRecord('${record._id}')">Delete</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        recordsList.innerHTML = rows;
+    }
+
     function loadMedicalRecords() {
-        fetch('/mrecords/', {
+        console.log('Loading medical records...');
+        fetch('/mrecords', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -12,35 +29,25 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
-                recordsList.innerHTML = '';
-                data.forEach(record => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td>${record.name}</td>
-                    <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="downloadRecord('${record._id}')">Download</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteRecord('${record._id}')">Delete</button>
-                    </td>
-                `;
-                    recordsList.appendChild(row);
-                });
+                console.log('Loaded data:', data);
+                displayRecords(data);
             })
             .catch(error => console.error('Failed to load medical records:', error));
     }
 
-    // Function to handle form submission
     uploadForm.onsubmit = function (event) {
         event.preventDefault();
+        console.log('Submitting form...');
         const formData = new FormData(uploadForm);
         fetch('/mrecords/upload', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                // No headers needed for FormData as it sets Content-Type automatically
             },
             body: formData,
         })
             .then(response => {
+                console.log('Upload response', response);
                 if (!response.ok) throw new Error('Upload failed');
                 return response.json();
             })
@@ -54,8 +61,16 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     };
 
-    // Initialize medical records list on page load
-    loadMedicalRecords();
+    loadMedicalRecords(); // Call this function to load records on page load
 });
 
-// Implement downloadRecord and deleteRecord functions as needed
+// Functions to implement
+function downloadRecord(recordId) {
+    console.log('Downloading record with ID:', recordId);
+    // Add implementation based on your server setup
+}
+
+function deleteRecord(recordId) {
+    console.log('Deleting record with ID:', recordId);
+    // Add implementation based on your server setup
+}

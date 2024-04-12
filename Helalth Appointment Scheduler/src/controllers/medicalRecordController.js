@@ -1,29 +1,45 @@
-const MedicalRecord = require('../models/mrecords'); // Assuming a Mongoose model is set up
+const MedicalRecord = require('../models/mrecords');
 
+// Upload a medical record to the database
 exports.uploadMedicalRecord = async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded.' });
+    }
+
     try {
-        const { file } = req;
-        // Assuming file handling middleware like multer is in use
-        const record = new MedicalRecord({
-            name: file.originalname,
+        // Here we are assuming that req.patientId is being set correctly by your authentication middleware
+        const newRecord = new MedicalRecord({
+            name: req.file.originalname,
+            filePath: req.file.path,
             uploadedDate: new Date(),
-            filePath: file.path, // Assuming file storage setup
-            userId: req.user._id, // Assuming user is attached to req via middleware
+            patientId: req.patientId // make sure this is the right patient ID
         });
-        await record.save();
-        res.status(201).json({ message: 'Medical record uploaded successfully' });
+
+        await newRecord.save();
+
+        res.status(201).json({
+            message: 'File uploaded successfully',
+            record: newRecord
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to upload medical record', error: error.toString() });
+        res.status(500).json({
+            message: 'Failed to upload the file',
+            error: error.message
+        });
     }
 };
 
+// Get all medical records for a patient
 exports.getMedicalRecords = async (req, res) => {
     try {
-        const records = await MedicalRecord.find({ userId: req.user._id });
-        res.json(records);
+        const records = await MedicalRecord.find({ patientId: req.patientId });
+        res.status(200).json(records);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to get medical records', error: error.toString() });
+        res.status(500).json({
+            message: 'Failed to retrieve records',
+            error: error.message
+        });
     }
 };
 
-// Add more controller methods for downloading and deleting records as needed
+// ... Add other methods for handling downloads, deletion, etc. ...

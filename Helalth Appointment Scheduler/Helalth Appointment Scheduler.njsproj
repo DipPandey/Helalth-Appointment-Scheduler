@@ -51,6 +51,7 @@
     <Content Include="src\controllers\authController.js" />
     <Content Include="src\controllers\medicalRecordController.js" />
     <Content Include="src\controllers\userController.js" />
+    <Content Include="src\middleware\multerConfig.js" />
     <Content Include="src\middleware\verifyTokens.js" />
     <Content Include="src\Models\Appointment.js" />
     <Content Include="src\Models\mrecords.js" />

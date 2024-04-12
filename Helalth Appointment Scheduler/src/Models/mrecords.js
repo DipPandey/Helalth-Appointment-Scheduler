@@ -13,11 +13,12 @@ const medicalRecordSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Assuming you have a User model
+    patientId: {
+        type: String,
         required: true
     }
 });
 
-module.exports = mongoose.model('MedicalRecord', medicalRecordSchema);
+const MedicalRecord = mongoose.model('MedicalRecord', medicalRecordSchema);
+
+module.exports = MedicalRecord;

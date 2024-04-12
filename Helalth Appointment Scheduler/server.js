@@ -13,16 +13,7 @@ const appointmentRoutes = require('./src/routes/appointmentRoutes');
 
 const medicalRecordRoutes = require('./src/routes/medicalRecordRoutes'); // Assuming you have this file
 
-// Multer setup for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/') // Ensure the 'uploads/' directory exists
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-    }
-});
-const upload = multer({ storage: storage });
+
 
 
 // Initialize Express
@@ -42,19 +33,19 @@ app.use(express.json());
 
 // Serveing static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Define authRoutes after the express app is initialized and middleware set
 
 app.use('/auth', authRoutes);//auth routes
 app.use('/user', userRoutes);//user routes
 app.use('/appointments', appointmentRoutes); // Appointment routes
-app.use('/mrecords', medicalRecordRoutes);
+app.use('/mrecords', medicalRecordRoutes);//medical record routes
 // Route to serve the index.html file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html')); // Ensure this path points to your actual index.html file
 });
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 
 app.get('/dashboard', (req, res) => {
