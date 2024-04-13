@@ -5,7 +5,12 @@ const medicalRecordSchema = new mongoose.Schema({
     name: String,
     filePath: String,
     uploadedDate: Date,
-    patientId: String, // this can be an ObjectId if you reference another collection
+    patientId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+ // this can be an ObjectId if you reference another collection
 });
 
 const MedicalRecord = mongoose.model('MedicalRecord', medicalRecordSchema);
