@@ -1,12 +1,11 @@
 const express = require('express');
-const router = express.Router();
 const medicalRecordController = require('../controllers/medicalRecordController');
-const verifyToken = require('../middleware/verifyTokens');
-const multerConfig = require('../middleware/multerConfig');
-const path = require('path');
+const verifyToken = require('../middleware/verifyTokens'); // assuming you have this middleware
+const upload = require('../middleware/multerConfig'); 
 
+const router = express.Router();
 
-router.post('/upload', verifyToken, multerConfig.upload.single('file'), medicalRecordController.uploadMedicalRecord);
+router.post('/upload', verifyToken, upload.single('file'), medicalRecordController.uploadMedicalRecord);
 router.get('/', verifyToken, medicalRecordController.getMedicalRecords);
 
 

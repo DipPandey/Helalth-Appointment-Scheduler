@@ -42,13 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/mrecords/upload', {
             method: 'POST',
             headers: {
-                // No headers needed for FormData as it sets Content-Type automatically
+                // Removed 'Content-Type': 'application/json',
+                // Don't set Content-Type header for FormData. Let the browser set it.
+                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
             },
-            body: formData,
+            body: formData, // FormData is sent as multipart/form-data
         })
             .then(response => {
                 console.log('Upload response', response);
-                if (!response.ok) throw new Error('Upload failed');
+                if (!response.ok) throw new Error('Upload failed: ' + response.statusText); // Include statusText in error message
                 return response.json();
             })
             .then(() => {
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Failed to upload medical record:', error);
-                alert('Failed to upload medical record.');
+                alert('Failed to upload medical record: ' + error.message); // Show error message from the Error object
             });
     };
 

@@ -7,12 +7,12 @@ exports.uploadMedicalRecord = async (req, res) => {
     }
 
     try {
-        // Here we are assuming that req.patientId is being set correctly by your authentication middleware
+        const patientId = req.user._id; // Make sure this is being set by your auth middleware
         const newRecord = new MedicalRecord({
-            name: req.file.originalname,
-            filePath: req.file.path,
-            uploadedDate: new Date(),
-            patientId: req.patientId // make sure this is the right patient ID
+            name: req.file.originalname, // Use the original file name
+            filePath: req.file.path, // Use the file path from Multer
+            uploadedDate: new Date(), // Use the current date or req.file.uploadedDate if you've set it in Multer
+            patientId, // Use the patient ID from the authenticated user
         });
 
         await newRecord.save();
@@ -29,10 +29,12 @@ exports.uploadMedicalRecord = async (req, res) => {
     }
 };
 
+
 // Get all medical records for a patient
 exports.getMedicalRecords = async (req, res) => {
     try {
-        const records = await MedicalRecord.find({ patientId: req.patientId });
+        const patientId = req.user._id.toString();
+        const records = await MedicalRecord.find({ patientId: patientId });
         res.status(200).json(records);
     } catch (error) {
         res.status(500).json({

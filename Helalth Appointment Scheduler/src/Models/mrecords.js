@@ -1,22 +1,11 @@
+// This should be in your MedicalRecord.js model file
 const mongoose = require('mongoose');
 
 const medicalRecordSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    filePath: {
-        type: String,
-        required: true
-    },
-    uploadedDate: {
-        type: Date,
-        default: Date.now
-    },
-    patientId: {
-        type: String,
-        required: true
-    }
+    name: String,
+    filePath: String,
+    uploadedDate: Date,
+    patientId: String, // this can be an ObjectId if you reference another collection
 });
 
 const MedicalRecord = mongoose.model('MedicalRecord', medicalRecordSchema);
