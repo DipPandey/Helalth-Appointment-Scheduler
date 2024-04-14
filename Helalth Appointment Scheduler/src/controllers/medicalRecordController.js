@@ -74,5 +74,26 @@ exports.deleteMedicalRecord = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete record', error: error.message });
     }
 };
+exports.downloadMedicalRecord = async (req, res) => {
+    try {
+        const record = await MedicalRecord.findById(req.params.recordId);
+        if (!record) {
+            return res.status(404).json({ message: 'Record not found' });
+        }
+
+        const filePath = path.join(__dirname, '..', 'uploads', record.filePath); // Make sure this path is correct
+
+        // Check if file exists before trying to send it
+        if (fs.existsSync(filePath)) {
+            // Set the headers to prompt download and set the original file name
+            res.download(filePath, record.name);
+        } else {
+            res.status(404).send('File not found');
+        }
+    } catch (error) {
+        console.error('Error downloading record:', error);
+        res.status(500).json({ message: 'Error downloading record', error: error.message });
+    }
+};
 
 // ... Add other methods for handling downloads, deletion, etc. ...

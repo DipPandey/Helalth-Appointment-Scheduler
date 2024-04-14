@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/upload', verifyToken, upload.single('file'), medicalRecordController.uploadMedicalRecord);
 router.get('/', verifyToken, medicalRecordController.getMedicalRecords);
 router.delete('/:recordId', verifyToken, medicalRecordController.deleteMedicalRecord);
+router.get('/download/:recordId', verifyToken, medicalRecordController.downloadMedicalRecord);
 
 
 

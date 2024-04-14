@@ -106,14 +106,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to view a record
     window.viewRecord = function (filePath) {
-        window.open(`/uploads/${filePath}`);
+        // Assuming 'filePath' is the relative path to the file
+        const url = `/uploads/${filePath}`;
+        window.open(url, '_blank'); // Open the file in a new tab
     };
+    // Function to trigger a file download in the browser
+    function downloadRecord(recordId) {
+        // Fetch the file from the server
+        fetch(`/mrecords/download/${recordId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+                // Retrieve filename from the Content-Disposition header
+                const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+                return response.blob(); // Parse the response as Blob
+            })
+            .then(blob => {
+                // Create a URL for the blob
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || 'downloaded_file'; // Use the filename from the header or a default
+                document.body.appendChild(a);
+                a.click(); // Start the download
+                window.URL.revokeObjectURL(url); // Clean up
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Download error:', error);
+                alert(`Download error: ${error.message}`);
+            });
+    }
 
-    // Function to download a record
-    window.downloadRecord = function (recordId) {
-        // Add implementation based on how you handle file downloads
-        window.location = `/mrecords/download/${recordId}`;
-    };
+
+
+
+
 
     // Initially load medical records
     loadMedicalRecords();
