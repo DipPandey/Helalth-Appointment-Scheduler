@@ -2,77 +2,119 @@ document.addEventListener('DOMContentLoaded', function () {
     const uploadForm = document.getElementById('uploadForm');
     const recordsList = document.getElementById('recordsList');
 
-    function displayRecords(records) {
-        const rows = records.map(record => {
-            return `
-                <tr>
-                    <td>${record.name}</td>
-                    <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
-                    <td>
-                        <a href="/uploads/${record.filePath}" class="btn btn-sm btn-primary" target="_blank">View</a>
-                        <button class="btn btn-sm btn-primary" onclick="downloadRecord('${record._id}')">Download</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteRecord('${record._id}')">Delete</button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-        recordsList.innerHTML = rows;
-    }
-
-    function loadMedicalRecords() {
-        console.log('Loading medical records...');
-        fetch('/mrecords', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Loaded data:', data);
-                displayRecords(data);
-            })
-            .catch(error => console.error('Failed to load medical records:', error));
-    }
-
-    uploadForm.onsubmit = function (event) {
+    // Function to handle uploading a new medical record
+    uploadForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        console.log('Submitting form...');
-        const formData = new FormData(uploadForm);
+        const formData = new FormData(this);
         fetch('/mrecords/upload', {
             method: 'POST',
             headers: {
-                // Removed 'Content-Type': 'application/json',
-                // Don't set Content-Type header for FormData. Let the browser set it.
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Include the auth token from localStorage
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
             },
-            body: formData, // FormData is sent as multipart/form-data
+            body: formData
         })
-            .then(response => {
-                console.log('Upload response', response);
-                if (!response.ok) throw new Error('Upload failed: ' + response.statusText); // Include statusText in error message
-                return response.json();
-            })
-            .then(() => {
-                $('#uploadModal').modal('hide');
-                loadMedicalRecords(); // Reload records list to include the new upload
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                }
+                loadMedicalRecords(); // Refresh the list
             })
             .catch(error => {
-                console.error('Failed to upload medical record:', error);
-                alert('Failed to upload medical record: ' + error.message); // Show error message from the Error object
+                console.error('Upload Error:', error);
+                alert('Failed to upload record.');
             });
+    });
+
+    // Function to display records on the page
+    function displayRecords(records) {
+        recordsList.innerHTML = records.map(record => `
+            <tr id="record-${record._id}">
+                <td>${record.name}</td>
+                <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
+                <td>
+                    <button onclick="viewRecord('${record.filePath}')" class="btn btn-primary">View</button>
+                    <button onclick="downloadRecord('${record._id}')" class="btn btn-secondary">Download</button>
+                    <button onclick="deleteRecord('${record._id}')" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+        // Set innerHTML of records list to the records HTML string
+        recordsList.innerHTML = recordsHTML;
+
+        // Event delegation for view, download, and delete buttons
+        recordsList.addEventListener('click', (event) => {
+            const action = event.target.getAttribute('data-action');
+            const recordId = event.target.getAttribute('data-record-id');
+            const filePath = event.target.getAttribute('data-file-path');
+
+            switch (action) {
+                case 'view':
+                    viewRecord(filePath);
+                    break;
+                case 'download':
+                    downloadRecord(recordId);
+                    break;
+                case 'delete':
+                    deleteRecord(recordId);
+                    break;
+                default:
+                    // If it's not a recognized action, do nothing
+                    break;
+            }
+        });
+    }
+
+    // Function to load medical records from the server
+    function loadMedicalRecords() {
+        fetch('/mrecords', {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                displayRecords(data);
+            })
+            .catch(error => {
+                console.error('Load Error:', error);
+            });
+    }
+
+    // Function to delete a record
+    window.deleteRecord = function (recordId) {
+        if (confirm('Are you sure you want to delete this record?')) {
+            fetch(`/mrecords/${recordId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    }
+                    loadMedicalRecords(); // Refresh the list
+                })
+                .catch(error => {
+                    console.error('Delete Error:', error);
+                    alert('Failed to delete record.');
+                });
+        }
     };
 
-    loadMedicalRecords(); // Call this function to load records on page load
+    // Function to view a record
+    window.viewRecord = function (filePath) {
+        window.open(`/uploads/${filePath}`);
+    };
+
+    // Function to download a record
+    window.downloadRecord = function (recordId) {
+        // Add implementation based on how you handle file downloads
+        window.location = `/mrecords/download/${recordId}`;
+    };
+
+    // Initially load medical records
+    loadMedicalRecords();
 });
-
-// Functions to implement
-function downloadRecord(recordId) {
-    console.log('Downloading record with ID:', recordId);
-    // Add implementation based on your server setup
-}
-
-function deleteRecord(recordId) {
-    console.log('Deleting record with ID:', recordId);
-    // Add implementation based on your server setup
-}

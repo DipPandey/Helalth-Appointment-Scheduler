@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.post('/upload', verifyToken, upload.single('file'), medicalRecordController.uploadMedicalRecord);
 router.get('/', verifyToken, medicalRecordController.getMedicalRecords);
+router.delete('/:recordId', verifyToken, medicalRecordController.deleteMedicalRecord);
+
 
 
 // Define more routes for downloading and deleting records
