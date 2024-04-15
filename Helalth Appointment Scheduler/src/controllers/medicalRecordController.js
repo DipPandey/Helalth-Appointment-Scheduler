@@ -1,4 +1,5 @@
 const MedicalRecord = require('../models/mrecords');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
@@ -74,6 +75,7 @@ exports.deleteMedicalRecord = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete record', error: error.message });
     }
 };
+
 exports.downloadMedicalRecord = async (req, res) => {
     try {
         const record = await MedicalRecord.findById(req.params.recordId);
@@ -81,19 +83,28 @@ exports.downloadMedicalRecord = async (req, res) => {
             return res.status(404).json({ message: 'Record not found' });
         }
 
-        const filePath = path.join(__dirname, '..', 'uploads', record.filePath); // Make sure this path is correct
+        // The file's path should be relative to the server's root
+        const filePath = path.join(__dirname, '../uploads', record.filePath);
 
-        // Check if file exists before trying to send it
+        // Check if file exists before attempting to send it
         if (fs.existsSync(filePath)) {
-            // Set the headers to prompt download and set the original file name
-            res.download(filePath, record.name);
+            // Set the proper headers to prompt the download on the client's side
+            res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(record.name));
+            res.setHeader('Content-Type', 'application/octet-stream');
+
+            // Stream the file to the client
+            fs.createReadStream(filePath).pipe(res);
         } else {
-            res.status(404).send('File not found');
+            return res.status(404).json({ message: 'File not found' });
         }
     } catch (error) {
-        console.error('Error downloading record:', error);
-        res.status(500).json({ message: 'Error downloading record', error: error.message });
+        console.error('Error downloading the record:', error);
+        res.status(500).json({ message: 'Error downloading the record', error });
     }
 };
+
+// ... (rest of your exports)
+
+
 
 // ... Add other methods for handling downloads, deletion, etc. ...

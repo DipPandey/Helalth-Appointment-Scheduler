@@ -12,6 +12,7 @@ router.get('/download/:recordId', verifyToken, medicalRecordController.downloadM
 
 
 
+
 // Define more routes for downloading and deleting records
 
 module.exports = router;

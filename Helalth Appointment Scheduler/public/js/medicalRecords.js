@@ -26,44 +26,48 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
+
+
     // Function to display records on the page
     function displayRecords(records) {
-        recordsList.innerHTML = records.map(record => `
-            <tr id="record-${record._id}">
-                <td>${record.name}</td>
-                <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
-                <td>
-                    <button onclick="viewRecord('${record.filePath}')" class="btn btn-primary">View</button>
-                    <button onclick="downloadRecord('${record._id}')" class="btn btn-secondary">Download</button>
-                    <button onclick="deleteRecord('${record._id}')" class="btn btn-danger">Delete</button>
-                </td>
-            </tr>
-        `).join('');
-        // Set innerHTML of records list to the records HTML string
+        // Create the HTML string for records
+        const recordsHTML = records.map(record => `
+        <tr id="record-${record._id}">
+            <td>${record.name}</td>
+            <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
+            <td>
+                <button data-action="view" data-file-path="${record.filePath}" class="btn btn-primary">View</button>
+                <button data-action="download" data-record-id="${record._id}" class="btn btn-secondary download-button">Download</button>
+                <button data-action="delete" data-record-id="${record._id}" class="btn btn-danger delete-button">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+
+        // Set the innerHTML of the records list to the new recordsHTML string
         recordsList.innerHTML = recordsHTML;
 
-        // Event delegation for view, download, and delete buttons
+        // Now that the buttons are rendered, you can add event listeners to them
+        // However, we can use event delegation on the recordsList to handle all button clicks
         recordsList.addEventListener('click', (event) => {
-            const action = event.target.getAttribute('data-action');
-            const recordId = event.target.getAttribute('data-record-id');
-            const filePath = event.target.getAttribute('data-file-path');
-
-            switch (action) {
-                case 'view':
-                    viewRecord(filePath);
-                    break;
-                case 'download':
-                    downloadRecord(recordId);
-                    break;
-                case 'delete':
-                    deleteRecord(recordId);
-                    break;
-                default:
-                    // If it's not a recognized action, do nothing
-                    break;
+            // Use event delegation to determine if a button was clicked
+            if (event.target.matches('.download-button')) {
+                const recordId = event.target.dataset.recordId;
+                downloadRecord(recordId);
+            }
+            // Implement similar event delegation for view and delete actions
+            if (event.target.matches('.delete-button')) {
+                const recordId = event.target.dataset.recordId;
+                deleteRecord(recordId);
+            }
+            if (event.target.matches('.view-button')) {
+                const filePath = event.target.dataset.filePath;
+                viewRecord(filePath);
             }
         });
     }
+
+    // No changes needed to the viewRecord, downloadRecord, and deleteRecord functions
+
 
     // Function to load medical records from the server
     function loadMedicalRecords() {
@@ -80,6 +84,57 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Load Error:', error);
             });
     }
+    function downloadRecord(recordId) {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You must be logged in to download records.');
+            return; // Exit the function if there is no token
+        }
+
+        // Fetch the file from the server with the Authorization header
+        fetch(`/mrecords/download/${recordId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                // Retrieve filename from the Content-Disposition header if available
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'downloaded_record'; // Default filename if none is provided
+                if (contentDisposition) {
+                    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    let matches = filenameRegex.exec(contentDisposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+                return response.blob().then(blob => {
+                    // Create a URL for the blob
+                    const url = window.URL.createObjectURL(blob);
+                    // Create a temporary anchor element and trigger the download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a); // Append anchor to body
+                    a.click(); // Trigger the download
+                    window.URL.revokeObjectURL(url); // Clean up the URL object
+                    a.remove(); // Remove anchor from the body
+                });
+            })
+            .catch(e => {
+                console.error('Download failed:', e);
+                alert('Download failed: ' + e.message);
+            });
+    }
+
+
+
+
 
     // Function to delete a record
     window.deleteRecord = function (recordId) {
@@ -110,43 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const url = `/uploads/${filePath}`;
         window.open(url, '_blank'); // Open the file in a new tab
     };
-    // Function to trigger a file download in the browser
-    function downloadRecord(recordId) {
-        // Fetch the file from the server
-        fetch(`/mrecords/download/${recordId}`, {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token'),
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-                // Retrieve filename from the Content-Disposition header
-                const filename = response.headers.get('Content-Disposition').split('filename=')[1];
-                return response.blob(); // Parse the response as Blob
-            })
-            .then(blob => {
-                // Create a URL for the blob
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename || 'downloaded_file'; // Use the filename from the header or a default
-                document.body.appendChild(a);
-                a.click(); // Start the download
-                window.URL.revokeObjectURL(url); // Clean up
-                a.remove();
-            })
-            .catch(error => {
-                console.error('Download error:', error);
-                alert(`Download error: ${error.message}`);
-            });
-    }
-
-
-
-
-
 
     // Initially load medical records
     loadMedicalRecords();
