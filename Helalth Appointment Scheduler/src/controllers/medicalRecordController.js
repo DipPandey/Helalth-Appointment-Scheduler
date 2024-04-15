@@ -10,12 +10,14 @@ exports.uploadMedicalRecord = async (req, res) => {
     }
 
     try {
-        const patientId = req.user._id; // Make sure this is being set by your auth middleware
+        // Construct the relative path to store in the database
+        const relativePath = path.join('uploads', req.file.filename);
+
         const newRecord = new MedicalRecord({
-            name: req.file.originalname, // Use the original file name
-            filePath: req.file.path, // Use the file path from Multer
-            uploadedDate: new Date(), // Use the current date or req.file.uploadedDate if you've set it in Multer
-            patientId, // Use the patient ID from the authenticated user
+            name: req.file.originalname,
+            filePath: relativePath, // Store the relative path
+            uploadedDate: new Date(),
+            patientId: req.user._id,
         });
 
         await newRecord.save();
@@ -31,7 +33,6 @@ exports.uploadMedicalRecord = async (req, res) => {
         });
     }
 };
-
 
 // Get all medical records for a patient
 exports.getMedicalRecords = async (req, res) => {
@@ -49,25 +50,21 @@ exports.getMedicalRecords = async (req, res) => {
 
 exports.deleteMedicalRecord = async (req, res) => {
     try {
-        // Find the record to get the filePath
         const record = await MedicalRecord.findById(req.params.recordId);
         if (!record) {
             return res.status(404).json({ message: 'Record not found' });
         }
 
-        // Build the full file path using the filePath from the record
-        const filePath = path.join(__dirname, '..', 'uploads', record.filePath); // Adjust the path as needed
+        // Use the relative path to get the full path on the server
+        const filePath = path.join(__dirname, '..', record.filePath);
 
         // Check if the file exists before trying to delete it
         if (fs.existsSync(filePath)) {
-            // Use the synchronous version to ensure the file is deleted before the database operation
-            fs.unlinkSync(filePath);
+            fs.unlinkSync(filePath); // Delete the file synchronously
         } else {
-            // If the file doesn't exist, log the error (optional)
             console.error(`File not found: ${filePath}`);
         }
 
-        // After deleting the file, delete the record from the database
         await MedicalRecord.findByIdAndDelete(req.params.recordId);
         res.status(200).json({ message: 'Record and file deleted successfully' });
     } catch (error) {
@@ -84,18 +81,13 @@ exports.downloadMedicalRecord = async (req, res) => {
         }
 
         // The file's path should be relative to the server's root
-        const filePath = path.join(__dirname, '../uploads', record.filePath);
+        const filePath = path.join(__dirname, '..', record.filePath);
 
         // Check if file exists before attempting to send it
         if (fs.existsSync(filePath)) {
-            // Set the proper headers to prompt the download on the client's side
-            res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(record.name));
-            res.setHeader('Content-Type', 'application/octet-stream');
-
-            // Stream the file to the client
-            fs.createReadStream(filePath).pipe(res);
+            res.download(filePath, record.name); // Utilize Express's res.download() method
         } else {
-            return res.status(404).json({ message: 'File not found' });
+            res.status(404).json({ message: 'File not found' });
         }
     } catch (error) {
         console.error('Error downloading the record:', error);
@@ -104,7 +96,3 @@ exports.downloadMedicalRecord = async (req, res) => {
 };
 
 // ... (rest of your exports)
-
-
-
-// ... Add other methods for handling downloads, deletion, etc. ...

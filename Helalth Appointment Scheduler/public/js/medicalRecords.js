@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${record.name}</td>
             <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
             <td>
-                <button data-action="view" data-file-path="${record.filePath}" class="btn btn-primary">View</button>
+                <button data-action="view" data-file-path="${record.filePath}" class="btn btn-primary view-button">View</button>
                 <button data-action="download" data-record-id="${record._id}" class="btn btn-secondary download-button">Download</button>
                 <button data-action="delete" data-record-id="${record._id}" class="btn btn-danger delete-button">Delete</button>
             </td>
@@ -104,12 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 // Retrieve filename from the Content-Disposition header if available
-                const contentDisposition = response.headers.get('Content-Disposition');
                 let filename = 'downloaded_record'; // Default filename if none is provided
+                const contentDisposition = response.headers.get('Content-Disposition');
                 if (contentDisposition) {
                     const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
                     let matches = filenameRegex.exec(contentDisposition);
                     if (matches != null && matches[1]) {
+                        // Remove any surrounding quotes that may be present
                         filename = matches[1].replace(/['"]/g, '');
                     }
                 }
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Create a temporary anchor element and trigger the download
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = filename;
+                    a.download = filename; // Use the filename from the header
                     document.body.appendChild(a); // Append anchor to body
                     a.click(); // Trigger the download
                     window.URL.revokeObjectURL(url); // Clean up the URL object
@@ -131,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Download failed: ' + e.message);
             });
     }
+
 
 
 
