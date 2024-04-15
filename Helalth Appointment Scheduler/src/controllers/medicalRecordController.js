@@ -11,7 +11,7 @@ exports.uploadMedicalRecord = async (req, res) => {
 
     try {
         // Construct the relative path to store in the database
-        const relativePath = path.join('uploads', req.file.filename);
+        const relativePath = path.join('uploads/', req.file.filename);
 
         const newRecord = new MedicalRecord({
             name: req.file.originalname,
@@ -92,6 +92,25 @@ exports.downloadMedicalRecord = async (req, res) => {
     } catch (error) {
         console.error('Error downloading the record:', error);
         res.status(500).json({ message: 'Error downloading the record', error });
+    }
+};
+
+exports.viewMedicalRecord = async (req, res) => {
+    try {
+        const record = await MedicalRecord.findById(req.params.recordId);
+        if (!record) {
+            return res.status(404).send('Record not found');
+        }
+        const filePath = path.join(__dirname, '..', '../uploads', record.filePath);
+        if (fs.existsSync(filePath)) {
+            // Set inline disposition for viewing in the browser
+            res.setHeader('Content-Disposition', 'inline');
+            res.sendFile(filePath);
+        } else {
+            res.status(404).send('File not found');
+        }
+    } catch (error) {
+        res.status(500).send('Server error');
     }
 };
 

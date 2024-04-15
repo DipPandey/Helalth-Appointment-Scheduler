@@ -46,27 +46,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Set the innerHTML of the records list to the new recordsHTML string
         recordsList.innerHTML = recordsHTML;
-
+        // Now that the buttons are rendered, you can add event listeners to them
+        // However, we can use event delegation on the recordsList to handle all button clicks
+        recordsList.addEventListener('click', (event) => {
+            // Use event delegation to determine if a button was clicked
+            if (event.target.matches('.download-button')) {
+                const recordId = event.target.dataset.recordId;
+                downloadRecord(recordId);
+            }
+            // Implement similar event delegation for view and delete actions
+            if (event.target.matches('.delete-button')) {
+                const recordId = event.target.dataset.recordId;
+                deleteRecord(recordId);
+            }
+            if (event.target.matches('.view-button')) {
+                const filePath = event.target.dataset.filePath;
+                viewRecord(filePath);
+            }
+        });
        
     }
-    // Now that the buttons are rendered, you can add event listeners to them
-    // However, we can use event delegation on the recordsList to handle all button clicks
-    recordsList.addEventListener('click', (event) => {
-        // Use event delegation to determine if a button was clicked
-        if (event.target.matches('.download-button')) {
-            const recordId = event.target.dataset.recordId;
-            downloadRecord(recordId);
-        }
-        // Implement similar event delegation for view and delete actions
-        if (event.target.matches('.delete-button')) {
-            const recordId = event.target.dataset.recordId;
-            deleteRecord(recordId);
-        }
-        if (event.target.matches('.view-button')) {
-            const filePath = event.target.dataset.filePath;
-            viewRecord(filePath);
-        }
-    });
+    
     // No changes needed to the viewRecord, downloadRecord, and deleteRecord functions
 
 
@@ -165,10 +165,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to view a record
     window.viewRecord = function (filePath) {
         // Ensure 'uploads' is part of the path if it's not included in the filePath
-        const baseUrl = 'uploads/';
-        const url = baseUrl + filePath;
-        window.open(url, '_blank'); // Open the file in a new tab
+        const baseUrl = window.location.origin; // This will be something like http://localhost:1337
+        const encodedFilePath = encodeURIComponent(filePath); // Ensure the path is URL encoded
+        const fileUrl = `${encodedFilePath}`; // Construct the full URL
+        window.open(fileUrl, '_blank'); // Open the file in a new tab/window
     };
+
+
 
 
     // Initially load medical records
