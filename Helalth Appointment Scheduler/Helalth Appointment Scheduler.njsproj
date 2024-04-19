@@ -54,6 +54,7 @@
     <Content Include="src\middleware\multerConfig.js" />
     <Content Include="src\middleware\verifyTokens.js" />
     <Content Include="src\Models\Appointment.js" />
+    <Content Include="src\Models\Doctor.js" />
     <Content Include="src\Models\mrecords.js" />
     <Content Include="src\Models\User.js" />
     <Content Include="src\routes\appointmentRoutes.js" />

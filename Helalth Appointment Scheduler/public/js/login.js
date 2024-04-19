@@ -77,7 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const username = document.getElementById('signupUsername').value; // Assuming you have this field in your form
-            const name = document.getElementById('signupName').value; // Assuming you have this field in your form
+            const name = document.getElementById('signupName').value;
+            // Assuming you have this field in your form
 
             const signupData = { email, password, username, name }; // Include other data as needed
 

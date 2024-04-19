@@ -14,7 +14,6 @@ router.patch('/reschedule/:appointmentId', verifyToken, appointmentController.re
 // In appointmentRoutes.js
 router.patch('/check-in/:appointmentId', verifyToken, appointmentController.checkInAppointment);
 
-
 // PATCH request to change the status of an appointment to 'completed'
 //router.patch('/complete/:appointmentId', verifyToken, appointmentController.completeAppointment);
 
