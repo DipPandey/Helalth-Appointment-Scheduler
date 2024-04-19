@@ -3,6 +3,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
 
+    // Inside login.js
+    // Function to send Google ID token to the server
+    function onGoogleSignIn(googleUser) {
+        const id_token = googleUser.getAuthResponse().id_token;
+
+        fetch('/auth/google/callback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token: id_token })
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    // Possibly store additional user info here
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Google sign-in successful, but no token received.');
+                }
+            })
+            .catch((error) => {
+                alert('Google sign-in failed: ' + error.message);
+            });
+    }
+
+    // Listen for the Google Sign-In button click
+    // The 'g-signin2' class has the data-onsuccess attribute set to call this function
+    window.onGoogleSignIn = onGoogleSignIn; 
+
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
 

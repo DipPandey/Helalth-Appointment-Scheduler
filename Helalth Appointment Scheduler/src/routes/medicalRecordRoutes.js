@@ -16,8 +16,6 @@ router.get('/download/:recordId', verifyToken, medicalRecordController.downloadM
 // Delete a specific medical record
 router.delete('/:recordId', verifyToken, medicalRecordController.deleteMedicalRecord);
 
-// View a specific medical record
-router.get('/view/:recordId', verifyToken, medicalRecordController.viewMedicalRecord);
 
 
 // Add other routes as needed...

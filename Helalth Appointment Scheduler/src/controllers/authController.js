@@ -2,6 +2,27 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// Inside authController.js
+const { OAuth2Client } = require('google-auth-library');
+const CLIENT_ID = '227159597585-60q6lu5notm1ddeskrplqi517g404e9e.apps.googleusercontent.com';
+const client = new OAuth2Client(CLIENT_ID);
+
+exports.googleAuth = async (req, res) => {
+    try {
+        const { token } = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        // Use the payload to authenticate the user
+        res.json({ success: true, user: payload });
+    } catch (error) {
+        res.status(401).json({ success: false, message: 'Authentication failed', error: error.toString() });
+    }
+};
+
+
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;

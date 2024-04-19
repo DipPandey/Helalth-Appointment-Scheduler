@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${record.name}</td>
             <td>${new Date(record.uploadedDate).toLocaleDateString()}</td>
             <td>
-                <button data-action="view" data-file-path="${record.filePath}" class="btn btn-primary view-button">View</button>
+                
                 <button data-action="download" data-record-id="${record._id}" class="btn btn-secondary download-button">Download</button>
                 <button data-action="delete" data-record-id="${record._id}" class="btn btn-danger delete-button">Delete</button>
             </td>
@@ -162,36 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    window.viewRecord = function (recordId) {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('You must be logged in to view records.');
-            return;
-        }
-
-        const fileUrl = `${window.location.origin}/mrecords/view/${recordId}`;
-
-        fetch(fileUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return response.blob();
-            })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                window.open(url, '_blank');
-                // Note: Do not revoke the URL here, as it's being used by the new tab.
-            })
-            .catch(error => {
-                console.error('View Error:', error);
-                alert(`Failed to view record: ${error.message}`);
-            });
-    };
-
+   
 
     // Initially load medical records
     loadMedicalRecords();
