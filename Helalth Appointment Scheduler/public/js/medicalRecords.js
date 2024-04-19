@@ -162,16 +162,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Function to view a record
-    window.viewRecord = function (filePath) {
-        // Ensure 'uploads' is part of the path if it's not included in the filePath
-        const baseUrl = window.location.origin; // This will be something like http://localhost:1337
-        const encodedFilePath = encodeURIComponent(filePath); // Ensure the path is URL encoded
-        const fileUrl = `${encodedFilePath}`; // Construct the full URL
-        window.open(fileUrl, '_blank'); // Open the file in a new tab/window
+    window.viewRecord = function (recordId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You must be logged in to view records.');
+            return;
+        }
+
+        const fileUrl = `${window.location.origin}/mrecords/view/${recordId}`;
+
+        fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                // Note: Do not revoke the URL here, as it's being used by the new tab.
+            })
+            .catch(error => {
+                console.error('View Error:', error);
+                alert(`Failed to view record: ${error.message}`);
+            });
     };
-
-
 
 
     // Initially load medical records

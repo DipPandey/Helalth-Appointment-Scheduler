@@ -95,23 +95,44 @@ exports.downloadMedicalRecord = async (req, res) => {
     }
 };
 
+// Inside medicalRecordController.js
+// Inside medicalRecordController.js
+
 exports.viewMedicalRecord = async (req, res) => {
     try {
-        const record = await MedicalRecord.findById(req.params.recordId);
+        const { recordId } = req.params;
+        // Retrieve the record from the database
+        const record = await MedicalRecord.findById(recordId);
+
         if (!record) {
-            return res.status(404).send('Record not found');
+            return res.status(404).json({ message: 'Record not found' });
         }
-        const filePath = path.join(__dirname, '..', '../uploads', record.filePath);
+
+        const filePath = path.join(__dirname, '..', record.filePath);
         if (fs.existsSync(filePath)) {
-            // Set inline disposition for viewing in the browser
-            res.setHeader('Content-Disposition', 'inline');
-            res.sendFile(filePath);
+            // Determine the file type for setting the Content-Type header
+            const fileType = path.extname(filePath).toLowerCase();
+            let contentType = 'application/octet-stream';
+
+            if (fileType === '.pdf') {
+                contentType = 'application/pdf';
+            } else if (fileType === '.jpg' || fileType === '.jpeg') {
+                contentType = 'image/jpeg';
+            } else if (fileType === '.png') {
+                contentType = 'image/png';
+            }
+            // Set headers for inline viewing
+            res.setHeader('Content-Type', contentType);
+            res.sendfile(filePath, record.name);
         } else {
-            res.status(404).send('File not found');
+            res.status(404).json({ message: 'File does not exist' });
         }
     } catch (error) {
-        res.status(500).send('Server error');
+        console.error('Failed to view medical record', error);
+        res.status(500).json({ message: 'An error occurred while retrieving the record' });
     }
 };
+
+
 
 // ... (rest of your exports)
