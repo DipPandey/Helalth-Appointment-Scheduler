@@ -19,6 +19,7 @@
         <div class="row">
 
 
+
             <!-- Main Content -->
             <div class="col-md-11 ml-sm-auto" style="background-color: #f8f9fa;">
                 <div class="current-date">
@@ -139,12 +140,28 @@
         </div>
     </div>
 
+    <!-- Insert this at the end of your <body> tag before your script tags -->
+    <div class="chatbox">
+        <div class="chatbox-header">
+            <h5 class="title">Healthcare Assistant</h5>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be appended here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your question..." autocomplete="off">
+            <button onclick="sendChat()">Send</button>
+        </div>
+    </div>
+
+
     <!-- Bootstrap and jQuery libraries -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Custom JavaScript for Dashboard Interactivity -->
     <script src="js/dashboard.js"></script>
+    <script src="js/chat.js"></script>
 
     <script src="js/script.js"></script>
 </body>

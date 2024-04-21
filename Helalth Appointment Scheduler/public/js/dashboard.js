@@ -291,4 +291,39 @@ function handleCheckIn(appointmentId) {
         });
 }
 
+document.getElementById('chatInput').addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        sendChat();
+    }
+});
+
+function sendChat() {
+    const input = document.getElementById('chatInput');
+    const message = input.value;
+    input.value = '';
+
+    appendMessage(message, 'You: ');
+    fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: message })
+    })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage(data.reply, 'Assistant : ');
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function appendMessage(text, sender) {
+    const messagesDiv = document.getElementById('chatMessages');
+    const messageElement = document.createElement('div');
+    messageElement.textContent = `${sender}: ${text}`;
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
+}
+
+
 

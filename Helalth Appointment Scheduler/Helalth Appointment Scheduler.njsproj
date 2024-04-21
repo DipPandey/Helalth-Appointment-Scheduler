@@ -49,6 +49,7 @@
     <Content Include="README.md" />
     <Content Include="src\controllers\appointmentController.js" />
     <Content Include="src\controllers\authController.js" />
+    <Content Include="src\controllers\chatController.js" />
     <Content Include="src\controllers\medicalRecordController.js" />
     <Content Include="src\controllers\userController.js" />
     <Content Include="src\middleware\multerConfig.js" />
@@ -59,6 +60,7 @@
     <Content Include="src\Models\User.js" />
     <Content Include="src\routes\appointmentRoutes.js" />
     <Content Include="src\routes\authRoutes.js" />
+    <Content Include="src\routes\chatRoutes.js" />
     <Content Include="src\routes\medicalRecordRoutes.js" />
     <Content Include="src\routes\userRoutes.js" />
     <Content Include="src\services\notificationService.js" />
