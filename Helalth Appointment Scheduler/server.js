@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config();
 const multer = require('multer');
+const bodyParser = require('body-parser');
 
 
 const authRoutes = require('./src/routes/authRoutes');
@@ -44,6 +45,7 @@ app.use('/user', userRoutes);//user routes
 app.use('/appointments', appointmentRoutes); // Appointment routes
 app.use('/mrecords', medicalRecordRoutes);//medical record routes
 // Use the route
+app.use(bodyParser.json());
 app.use('/api', chatRoutes); // You can adjust the base path as needed
 
 // Route to serve the index.html file
