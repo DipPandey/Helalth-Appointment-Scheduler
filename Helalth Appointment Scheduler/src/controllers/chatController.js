@@ -1,32 +1,34 @@
-// Import the OpenAI SDK
-const OpenAI = require('openai');
 const axios = require('axios');
-const apiKey = process.env.OPENAI_API_KEY;
+require('dotenv').config();
 
-// Assuming the OpenAI package exports a single OpenAIApi class
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
-
+// Replace 'OPENAI_API_KEY' with your actual key name from .env file
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 exports.getChatResponse = async (req, res) => {
-    const { message } = req.body;
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "text-davinci-003",
-            prompt: message,
-            max_tokens: 150
+            model: "gpt-3.5-turbo",
+            messages: [{ "role": "user", "content": req.body.message }],
+            temperature: 0.1
         }, {
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
                 'Content-Type': 'application/json'
             }
         });
-        const reply = response.data.choices[0].text.trim();
+        const reply = response.data.choices[0].message.content;
         res.json({ reply });
     } catch (error) {
-        console.error('Error calling OpenAI API:', error);
-        res.status(500).send('Failed to fetch response from OpenAI');
+        if (error.response && error.response.status === 429) {
+            // Extract the retry-after header value if present
+            const retryAfter = error.response.headers['retry-after'];
+            console.error(`Rate limit exceeded. Try again in ${retryAfter} seconds.`);
+            // Respond with a 'Too Many Requests' status code and the retry-after duration
+            res.status(429).send(`Rate limit exceeded. Try again in ${retryAfter} seconds.`);
+        } else {
+            console.error('Error calling OpenAI:', error);
+            res.status(500).send('Failed to fetch response from OpenAI');
+        }
     }
 };
 

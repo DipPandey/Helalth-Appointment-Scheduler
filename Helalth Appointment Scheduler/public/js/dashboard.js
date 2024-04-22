@@ -290,40 +290,48 @@ function handleCheckIn(appointmentId) {
             alert('Failed to check in.');
         });
 }
-
 document.getElementById('chatInput').addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
+        
         sendChat();
     }
 });
-
 function sendChat() {
     const input = document.getElementById('chatInput');
-    const message = input.value;
+    const message = input.value.trim();
+    if (!message) return; // Don't send an empty message
     input.value = '';
 
-    appendMessage(message, 'You: ');
+    // Update the endpoint if needed to match your server configuration
     fetch('/api/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify({ message })
     })
         .then(response => response.json())
         .then(data => {
-            appendMessage(data.reply, 'Assistant : ');
+            appendMessage(data.reply, 'AI');
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            appendMessage('Failed to get response.', 'System');
+        });
 }
 
-function appendMessage(text, sender) {
-    const messagesDiv = document.getElementById('chatMessages');
-    const messageElement = document.createElement('div');
-    messageElement.textContent = `${sender}: ${text}`;
-    messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
+// The rest of your chat.js code...
+
+
+
+function appendMessage(message, sender) {
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = `${sender}: ${message}`;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to the bottom
 }
+
 
 
 
