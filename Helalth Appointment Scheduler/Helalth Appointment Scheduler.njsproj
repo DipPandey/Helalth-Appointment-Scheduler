@@ -32,9 +32,11 @@
     <Content Include=".eslintrc" />
     <Content Include="config\db.js" />
     <Content Include="config\twilioConfig.js" />
+    <Content Include="public\adminDashboard.html" />
     <Content Include="public\bookAppoinments.html" />
     <Content Include="public\css\styles.css" />
     <Content Include="public\dashboard.html" />
+    <Content Include="public\js\adminDashboard.js" />
     <Content Include="public\js\bookAppoinments.js" />
     <Content Include="public\js\dashboard.js" />
     <Content Include="public\js\login.js" />
@@ -53,9 +55,9 @@
     <Content Include="src\controllers\medicalRecordController.js" />
     <Content Include="src\controllers\userController.js" />
     <Content Include="src\middleware\multerConfig.js" />
+    <Content Include="src\middleware\roleVerify.js" />
     <Content Include="src\middleware\verifyTokens.js" />
     <Content Include="src\Models\Appointment.js" />
-    <Content Include="src\Models\Doctor.js" />
     <Content Include="src\Models\mrecords.js" />
     <Content Include="src\Models\User.js" />
     <Content Include="src\routes\appointmentRoutes.js" />

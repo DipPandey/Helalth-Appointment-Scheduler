@@ -2,6 +2,9 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL; // Set this as an environment variable
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
 // Inside authController.js
 const { OAuth2Client } = require('google-auth-library');
 const CLIENT_ID = '227159597585-60q6lu5notm1ddeskrplqi517g404e9e.apps.googleusercontent.com';
@@ -27,6 +30,17 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Special admin check
+        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            const token = jwt.sign({ userId: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.json({
+                message: 'Admin login successful',
+                token: token,
+                user: { name: "Admin", role: "admin" },
+                redirectTo: '/adminDashboard'
+            });
+        }
+        
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: 'Authentication failed: user not found' });
@@ -51,7 +65,7 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
     try {
-        const { email, password, username, name } = req.body;
+        const { email, password, username, name, role } = req.body;
 
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
@@ -67,11 +81,12 @@ exports.signup = async (req, res) => {
             email,
             password, // Use hash instead after uncommenting the bcrypt lines
             username,
-            name
+            name,
+            role
         });
 
         await newUser.save();
-
+        
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.error('Error during signup:', error);

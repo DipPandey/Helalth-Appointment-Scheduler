@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((data) => {
                 if (data.token) {
                     localStorage.setItem('token', data.token); // Store the token
-                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('userId', data.userId || 'admin');
                     localStorage.setItem('name', data.name);//storing the name for welcome message
                     
                      // Store user ID if you send it back from the server
-                    window.location.href = data.redirectTo || '/dashboard';
+                    window.location.href = data.redirectTo;
                     
                     // Redirect to the dashboard or provided URL
                 } else {

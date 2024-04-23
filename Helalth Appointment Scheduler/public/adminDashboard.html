@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Healthcare Appointment Scheduler</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar for navigation -->
+            <div class="col-md-2" id="sidebar-container">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="#appointments-section">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#medical-records-section">Medical Records</a></li>
+                </ul>
+            </div>
+            <!-- Main Content Area -->
+            <div class="col-md-10 ml-sm-auto">
+                <h1>Admin Dashboard</h1>
+                <!-- Appointments Section -->
+                <div id="appointments-section">
+                    <h2>Appointments</h2>
+                    <div id="appointments-list"> <!-- Appointments data will be loaded here --> </div>
+                </div>
+                <!-- Medical Records Section -->
+                <div id="medical-records-section">
+                    <h2>Medical Records</h2>
+                    <div id="medical-records-list"> <!-- Medical records data will be loaded here --> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts and Libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/adminDashboard.js"></script>
+</body>
+</html>

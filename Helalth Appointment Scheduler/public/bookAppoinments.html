@@ -18,7 +18,7 @@
         <h2 class="mb-4">Book an Appointment</h2>
         <form id="bookingForm">
             <!-- Assuming patientId and doctorId would be set by the server or user selection -->
-            
+
 
             <div class="form-group">
                 <label for="appointmentDate">Date:</label>
@@ -56,8 +56,16 @@
 
             <div class="form-group">
                 <label for="appointmentLocation">Location:</label>
-                <input type="text" class="form-control" id="appointmentLocation" name="location" placeholder="Enter the location of the appointment" required>
+                <select class="form-control" id="appointmentLocation" name="location" required>
+                    <option value="">Select a location</option>
+                    <option value="Clinic A">Clinic A</option>
+                    <option value="Clinic B">Clinic B</option>
+                    <option value="Hospital X">Hospital X</option>
+                    <option value="Hospital Y">Hospital Y</option>
+                    <option value="Specialist Center Z">Specialist Center Z</option>
+                </select>
             </div>
+
 
             <button type="submit" class="btn btn-primary">Book Appointment</button>
         </form>
