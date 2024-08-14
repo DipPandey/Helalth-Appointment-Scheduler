@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MONGODB_URI = process.env.MONGODB_URI;;
+const MONGODB_URI = 'mongodb+srv://hasUser:string6113@has.rmeul.mongodb.net/?retryWrites=true&w=majority&appName=HAS';
 const db = mongoose.connection;
 
 mongoose.connect(MONGODB_URI, {
