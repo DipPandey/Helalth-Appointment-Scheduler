@@ -31,7 +31,6 @@
     <Content Include=".eslintrc" />
     <Content Include=".gitignore" />
     <Content Include="config\db.js" />
-    <Content Include="config\twilioConfig.js" />
     <Content Include="public\adminDashboard.html" />
     <Content Include="public\bookAppoinments.html" />
     <Content Include="public\css\styles.css" />
